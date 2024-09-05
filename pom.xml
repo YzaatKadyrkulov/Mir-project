@@ -8,7 +8,7 @@
         <version>3.3.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>kg.mir</groupId>
+    <groupId>kg.mir.Mirproject</groupId>
     <artifactId>Mir-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Mir-project</name>
