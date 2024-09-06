@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
-@Table(name = "total_sums")
+@Table(name = "payments")
 @Getter
 @Setter
 @NoArgsConstructor

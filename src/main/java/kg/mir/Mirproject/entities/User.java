@@ -33,9 +33,6 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne
-    private World world;
-
     @OneToMany(mappedBy = "user", cascade = {REFRESH, REMOVE, MERGE})
     private List<Payment> payments;
 
