@@ -36,6 +36,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = {REFRESH, REMOVE, MERGE})
     private List<Payment> payments;
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.MERGE})
+    private List<ForgotPasswordToken> forgotPasswordTokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
