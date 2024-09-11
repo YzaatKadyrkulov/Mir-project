@@ -1,0 +1,181 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-test-data-total_sums-table
+      author: Bektur777
+      changes:
+        - insert:
+            tableName: total_sums
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: percent1
+                  value: 10
+              - column:
+                  name: percent2
+                  value: 20
+              - column:
+                  name: percent3
+                  value: 30
+              - column:
+                  name: total_sum
+                  value: 100
+
+        - insert:
+            tableName: total_sums
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: percent1
+                  value: 15
+              - column:
+                  name: percent2
+                  value: 25
+              - column:
+                  name: percent3
+                  value: 35
+              - column:
+                  name: total_sum
+                  value: 150
+
+  - changeSet:
+      id: init-test-data-users-table
+      author: Bektur777
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: code
+                  value: "USR001"
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "password1"
+              - column:
+                  name: phone_number
+                  value: "+1234567890"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user1.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User One"
+              - column:
+                  name: goal
+                  value: 1000
+              - column:
+                  name: principal_debt
+                  value: 500
+              - column:
+                  name: total_sum
+                  value: 1500
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: code
+                  value: "ADM001"
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: password
+                  value: "adminpass"
+              - column:
+                  name: phone_number
+                  value: "+0987654321"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/admin.jpg"
+              - column:
+                  name: role
+                  value: "ADMIN"
+              - column:
+                  name: user_name
+                  value: "Admin"
+              - column:
+                  name: goal
+                  value: 2000
+              - column:
+                  name: principal_debt
+                  value: 1000
+              - column:
+                  name: total_sum
+                  value: 3000
+
+  - changeSet:
+      id: init-test-data-payments-table
+      author: Bektur777
+      changes:
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: date
+                  value: "2023-09-01"
+              - column:
+                  name: sum
+                  value: 500
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: status
+                  value: "PAID"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: date
+                  value: "2023-09-15"
+              - column:
+                  name: sum
+                  value: 250
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: status
+                  value: "WAITING"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: date
+                  value: "2023-09-20"
+              - column:
+                  name: sum
+                  value: 1000
+              - column:
+                  name: user_id
+                  value: 3
+              - column:
+                  name: status
+                  value: "PAID"
