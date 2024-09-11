@@ -19,6 +19,11 @@ public class AboutUsApi {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @GetMapping("/last")
+    public ResponseEntity<AboutUsResponse> getLastAboutUs() {
+        return ResponseEntity.ok(service.findLastInformation());
+    }
+
     @PostMapping
     public ResponseEntity<Long> createAboutUs(@RequestBody AboutUsRequest request) {
         return ResponseEntity.ok(service.save(request));

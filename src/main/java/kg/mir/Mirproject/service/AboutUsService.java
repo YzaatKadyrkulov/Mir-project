@@ -10,4 +10,6 @@ public interface AboutUsService {
     AboutUsResponse findById(Long id);
 
     void update(AboutUsRequest request);
+
+    AboutUsResponse findLastInformation();
 }

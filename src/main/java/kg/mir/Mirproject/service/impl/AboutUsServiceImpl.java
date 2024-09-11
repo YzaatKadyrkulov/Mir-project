@@ -39,4 +39,11 @@ public class AboutUsServiceImpl implements AboutUsService {
 
         aboutUsRepository.save(aboutUs);
     }
+
+    @Override
+    public AboutUsResponse findLastInformation() {
+        return mapper.toResponse(aboutUsRepository.findTopByOrderByIdDesc()
+                .orElseThrow(() -> new EntityNotFoundException("About Us Not Found"))
+        );
+    }
 }
