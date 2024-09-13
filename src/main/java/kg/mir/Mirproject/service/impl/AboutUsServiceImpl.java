@@ -31,8 +31,8 @@ public class AboutUsServiceImpl implements AboutUsService {
     }
 
     @Override
-    public void update(AboutUsRequest request) {
-        AboutUs aboutUs = aboutUsRepository.findById(request.id())
+    public void update(Long id, AboutUsRequest request) {
+        AboutUs aboutUs = aboutUsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("About Us Not Found"));
 
         mapper.updateEntityFromRequest(request, aboutUs);

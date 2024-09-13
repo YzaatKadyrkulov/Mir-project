@@ -9,7 +9,7 @@ public interface AboutUsService {
 
     AboutUsResponse findById(Long id);
 
-    void update(AboutUsRequest request);
+    void update(Long id, AboutUsRequest request);
 
     AboutUsResponse findLastInformation();
 }
