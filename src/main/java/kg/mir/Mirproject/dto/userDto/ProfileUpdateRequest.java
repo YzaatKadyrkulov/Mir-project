@@ -1,15 +1,16 @@
 package kg.mir.Mirproject.dto.userDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
+import kg.mir.Mirproject.validation.PasswordValidation;
 
-@Builder
-@AllArgsConstructor
-@Data
-public class ProfileUpdateRequest {
-    private String photoUrl;
-    private String fullName;
-    private String phoneNumber;
-    private int goal;
+public record ProfileUpdateRequest(
+        @NotNull
+        String photoUrl,
+        @NotNull
+        String name,
+        @PasswordValidation
+        String phoneNumber,
+        @NotNull(message = "Цель не может быть пустой")
+        int goal
+) {
 }

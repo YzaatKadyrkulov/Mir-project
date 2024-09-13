@@ -85,6 +85,9 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
                 .userName("Admin")
                 .email("admin@gmail.com")
+                .goal(0)
+                .principalDebt(0)
+                .totalSum(0)
                 .password(passwordEncoder.encode("Admin123"))
                 .role(Role.ADMIN)
                 .build();

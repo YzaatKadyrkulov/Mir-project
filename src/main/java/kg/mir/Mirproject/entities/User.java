@@ -2,6 +2,7 @@ package kg.mir.Mirproject.entities;
 
 import jakarta.persistence.*;
 import kg.mir.Mirproject.enums.Role;
+import kg.mir.Mirproject.enums.UserStatus;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,17 +22,18 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 @SequenceGenerator(name = "base_id_gen", sequenceName = "user_seq", allocationSize = 1)
 public class User extends BaseEntity implements UserDetails {
+    private String userName;
+    private String phoneNumber;
     private String email;
     private String password;
     private String photoUrl;
-    private String code;
     private int principalDebt;
     private int totalSum;
     private int goal;
-    private String userName;
-    private String phoneNumber;
     private String verificationCode;
     private Boolean isVerified;
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -19,7 +19,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -34,35 +33,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String tokenHeader = request.getHeader("Authorization");
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
-
             String token = tokenHeader.substring(7);
             if (StringUtils.hasText(token)) {
                 try {
-                    String username;
-                    try {
-                        username = jwtService.validateToken(token);
-                    } catch (MalformedJwtException e) {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-                        return;
-                    } catch (ExpiredJwtException e) {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-                        return;
-                    }
-
-                    String finalUsername = username;
+                    String username = jwtService.verifyToken(token);
                     User user = userRepository.getUserByEmail(username)
-                            .orElseThrow(() ->
-                                    new NotFoundException("User with email: %s not found".formatted(finalUsername)));
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(
-                                    new UsernamePasswordAuthenticationToken(
-                                            user.getEmail(),
-                                            null,
-                                            user.getAuthorities()
-                                    ));
-                } catch (JWTVerificationException e) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                            "Invalid token");
+                            .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(username)));
+                    SecurityContextHolder.getContext().setAuthentication(
+                            new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities())
+                    );
+                } catch (ExpiredJwtException e) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Token expired");
+                    return;
+                } catch (MalformedJwtException | JWTVerificationException e) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                    return;
                 }
             }
         }
