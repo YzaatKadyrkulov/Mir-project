@@ -29,9 +29,9 @@ public class AboutUsApi {
         return ResponseEntity.ok(service.save(request));
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateAboutUs(@RequestBody AboutUsRequest request) {
-        service.update(request);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateAboutUs(@PathVariable("id") Long id, @RequestBody AboutUsRequest request) {
+        service.update(id, request);
         return ResponseEntity.accepted().build();
     }
 }
