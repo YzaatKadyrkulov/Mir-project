@@ -1,8 +1,8 @@
-package kg.mir.Mirproject.security;
+package kg.mir.Mirproject.config.security;
 
+import kg.mir.Mirproject.config.security.jwt.JwtFilter;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.UserRepository;
-import kg.mir.Mirproject.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

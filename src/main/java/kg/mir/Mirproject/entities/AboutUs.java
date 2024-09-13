@@ -11,9 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "about-us")
 public class AboutUs {
-
     @Id
     private Long id;
-
     private String information;
 }

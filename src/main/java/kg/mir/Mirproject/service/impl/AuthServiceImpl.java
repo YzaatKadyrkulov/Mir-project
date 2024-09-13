@@ -10,7 +10,7 @@ import kg.mir.Mirproject.exception.AlreadyExistsException;
 import kg.mir.Mirproject.exception.BadCredentialException;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.UserRepository;
-import kg.mir.Mirproject.security.jwt.JwtService;
+import kg.mir.Mirproject.config.security.jwt.JwtService;
 import kg.mir.Mirproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

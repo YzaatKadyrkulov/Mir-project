@@ -1,4 +1,4 @@
-package kg.mir.Mirproject.security.jwt;
+package kg.mir.Mirproject.config.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

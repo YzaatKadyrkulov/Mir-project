@@ -25,9 +25,9 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     private String photoUrl;
     private String code;
-    private Integer principalDebt;
-    private Integer totalSum;
-    private Integer goal;
+    private int principalDebt;
+    private int totalSum;
+    private int goal;
     private String userName;
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
