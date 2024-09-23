@@ -1,0 +1,16 @@
+package kg.mir.Mirproject.service;
+
+import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
+import kg.mir.Mirproject.dto.userDto.ProfileResponse;
+import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
+
+import java.util.List;
+
+public interface UserService {
+    ProfileResponse updateUserProfileById( ProfileUpdateRequest profileUpdateRequest);
+    ProfileResponse getUserById();
+    SimpleResponse deleteUserById(Long id);
+    List<SubmittedResponse> getAllSubmittedUsers();
+    SimpleResponse changeUserStatusToSubmitted();
+}

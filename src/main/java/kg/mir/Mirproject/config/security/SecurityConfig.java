@@ -1,8 +1,8 @@
-package kg.mir.Mirproject.security;
+package kg.mir.Mirproject.config.security;
 
+import kg.mir.Mirproject.config.security.jwt.JwtFilter;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.UserRepository;
-import kg.mir.Mirproject.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,35 +31,29 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository.getUserByEmail(email)
-                .orElseThrow(
-                        () -> new NotFoundException(
-                                "Not found user with email: " + email));
+                .orElseThrow(() -> new NotFoundException("Not found user with email: " + email));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> {
-                    cors.configurationSource(request -> {
-                        var corsConfiguration = new CorsConfiguration();
-                        corsConfiguration.addAllowedOrigin("*");
-                        corsConfiguration.addAllowedMethod("*");
-                        corsConfiguration.addAllowedHeader("*");
-                        return corsConfiguration;
-                    });
-                }).csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((requests) ->
-                        requests
-                                .requestMatchers("/api/auth/**",
-                                        "/swagger-ui/**",
-                                        "v3/api-docs/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated())
-                .sessionManagement(
-                        (sessionManagement) ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider())
+        http.cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.addAllowedOrigin("*");
+                    corsConfiguration.addAllowedMethod("*");
+                    corsConfiguration.addAllowedHeader("*");
+                    return corsConfiguration;
+                }))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        http.csrf(AbstractHttpConfigurer::disable);
+
         return http.build();
     }
 
