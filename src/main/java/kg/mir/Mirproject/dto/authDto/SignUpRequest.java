@@ -4,9 +4,10 @@ import kg.mir.Mirproject.validation.EmailValidation;
 import kg.mir.Mirproject.validation.PasswordValidation;
 
 public record SignUpRequest(
+        String userName,
         @EmailValidation
         String email,
         @PasswordValidation
-        String password
+        String phoneNumber
 ) {
 }

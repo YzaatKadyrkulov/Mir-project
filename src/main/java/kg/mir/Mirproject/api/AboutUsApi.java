@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/about-us")
 @RequiredArgsConstructor
 public class AboutUsApi {
-
     private final AboutUsService service;
 
     @GetMapping("/{id}")

@@ -14,6 +14,5 @@ import lombok.*;
 @Table(name = "about_us")
 @SequenceGenerator(name = "base_id_gen", sequenceName = "about_us_seq", allocationSize = 1)
 public class AboutUs extends BaseEntity {
-
     private String information;
 }

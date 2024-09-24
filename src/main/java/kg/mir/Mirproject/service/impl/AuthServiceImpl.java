@@ -34,8 +34,9 @@ public class AuthServiceImpl implements AuthService {
             throw new AlreadyExistsException("User with email: " + signUpRequest.email() + " is already exist");
         }
         User newUser = User.builder()
+                .userName(signUpRequest.userName())
                 .email(signUpRequest.email())
-                .password(passwordEncoder.encode(signUpRequest.password()))
+                .phoneNumber(signUpRequest.phoneNumber())
                 .role(Role.USER)
                 .build();
 
