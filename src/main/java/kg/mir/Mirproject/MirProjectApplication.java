@@ -9,5 +9,4 @@ public class MirProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(MirProjectApplication.class, args);
     }
-
 }

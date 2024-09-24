@@ -2,6 +2,7 @@ package kg.mir.Mirproject.service.impl;
 
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
+import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
 import kg.mir.Mirproject.entities.User;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
 
     @Override
-    public ProfileResponse updateUserProfileById( ProfileUpdateRequest profileUpdateRequest) {
+    public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
         User user = getAuthentication();
         mapper.updateUserProfile(profileUpdateRequest, user);
         userRepository.save(user);
@@ -68,10 +69,22 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public List<GraduatedResponse> getAllGraduatedUsers() {
+        List<GraduatedResponse> users = userRepository.getAllGraduatedUsers();
+        return users.isEmpty() ? Collections.emptyList() : users;
+    }
+
+    @Override
+    public List<User> searchUsers(String query) {
+        List<User> users = userRepository.findByUserName(query);
+        return users.isEmpty() ? Collections.emptyList() : users;
+    }
+
     private User getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-      return userRepository.getUserByEmail(email)
+        return userRepository.getUserByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Пользователь с электронной почтой " + email + " не найден"));
     }
 }

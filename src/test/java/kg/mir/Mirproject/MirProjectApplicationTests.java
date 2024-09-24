@@ -9,5 +9,4 @@ class MirProjectApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

@@ -6,10 +6,13 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
+import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
+import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +35,7 @@ public class UserApi {
     @PutMapping("/updateProfile")
     public ResponseEntity<ProfileResponse> updateUserProfileById(
             @RequestBody @Valid ProfileUpdateRequest profileUpdateRequest) {
-        ProfileResponse updatedProfile = userService.updateUserProfileById( profileUpdateRequest);
+        ProfileResponse updatedProfile = userService.updateUserProfileById(profileUpdateRequest);
         return ResponseEntity.ok(updatedProfile);
     }
 
@@ -78,5 +81,27 @@ public class UserApi {
     public ResponseEntity<SimpleResponse> changeUserStatusToSubmitted() {
         SimpleResponse response = userService.changeUserStatusToSubmitted();
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Искать пользователя по имени и фамилии",
+            description = "Ищет получившего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("query") String query) {
+        List<User> users = userService.searchUsers(query);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Получить всех закончивих пользователей",
+            description = "Получает всех закончивших пользователей. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/getAllGraduatedUsers")
+    public ResponseEntity<List<GraduatedResponse>> getAllGraduatedUsers() {
+        List<GraduatedResponse> users = userService.getAllGraduatedUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
