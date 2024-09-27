@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT new kg.mir.Mirproject.dto.userDto.GraduatedResponse(u.userName, u.totalSum, u.photoUrl) FROM User u where u.userStatus = 'RECEIVED'")
     List<GraduatedResponse> getAllGraduatedUsers();
+
+    Optional<User> findByEmail(String email);
 }
