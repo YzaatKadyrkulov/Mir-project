@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Component
@@ -34,13 +35,15 @@ public class JwtService {
                 .withExpiresAt(ZonedDateTime.now().plusMonths(1).toInstant())
                 .sign(algorithm);
     }
+
     public String verifyToken(String token) {
         Algorithm algorithm = Algorithm.HMAC512(secretKey);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJwt = jwtVerifier.verify(token);
         return decodedJwt.getClaim("email").asString();
     }
-    public User getAuthenticationUser(){
+
+    public User getAuthenticationUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.getUserByEmail(email).orElseThrow(() ->
                 new NotFoundException("Пользователь с почтой %s не найден!".formatted(email)));

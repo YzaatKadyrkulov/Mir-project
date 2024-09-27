@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
+import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Role;
 import kg.mir.Mirproject.exception.AlreadyExistsException;
@@ -12,6 +13,8 @@ import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.config.security.jwt.JwtService;
 import kg.mir.Mirproject.service.AuthService;
+import kg.mir.Mirproject.service.EmailService;
+import kg.mir.Mirproject.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +27,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
+    private final EmailService emailService;
 
     @Override
     public AuthResponse signUp(SignUpRequest signUpRequest) {
@@ -42,7 +47,13 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(newUser);
         log.info("User with email: {} successfully signed up", signUpRequest.email());
+
         String token = jwtService.generateToken(newUser);
+
+        String resetPasswordToken = tokenService.generateResetPasswordToken(signUpRequest.email());
+
+        emailService.sendResetPasswordEmail(signUpRequest.email(), resetPasswordToken);
+
         return AuthResponse.builder()
                 .token(token)
                 .email(newUser.getEmail())
@@ -78,6 +89,23 @@ public class AuthServiceImpl implements AuthService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .build();
+    }
+
+    @Override
+    public void resetPassword(String token, ResetPasswordRequest resetPasswordRequest) {
+        String email = tokenService.getEmailFromToken(token);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User with email: " + email + " not found"));
+
+        if (!resetPasswordRequest.newPassword().equals(resetPasswordRequest.verifyPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.newPassword()));
+        userRepository.save(user);
+
+        log.info("Password successfully updated for user: {}", user.getEmail());
     }
 
     @PostConstruct

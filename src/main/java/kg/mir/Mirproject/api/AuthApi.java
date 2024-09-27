@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
+import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
 import kg.mir.Mirproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,5 +28,11 @@ public class AuthApi {
     @PostMapping("/signIn")
     public AuthResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping
+    public void resetPassword(String token, ResetPasswordRequest resetPasswordRequest) {
+        authService.resetPassword(token, resetPasswordRequest);
     }
 }
