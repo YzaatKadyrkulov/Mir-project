@@ -4,9 +4,7 @@ import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
-import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
-import kg.mir.Mirproject.dto.userDto.ProfileResponse;
-import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
+import kg.mir.Mirproject.dto.userDto.*;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
@@ -31,14 +29,44 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
 
+
+    @Override
+    public List<AllReceivedResponse> getAllReceivedUsers() {
+        List<AllReceivedResponse> users = userRepository.getAllReceivedUsers();
+        return users.isEmpty() ? Collections.emptyList() : users;
+    }
+
+    @Override
+    public ReceivedResponse getReceivedUserById(Long id) {
+        User user = userRepository.getUserById(id)
+                .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+        ReceivedResponse receivedResponse = new ReceivedResponse();
+        receivedResponse.setId(user.getId());
+        receivedResponse.setUserName(user.getUsername());
+        receivedResponse.setPhotoUrl(user.getPhotoUrl());
+        receivedResponse.setPrincipalDebt(user.getPrincipalDebt());
+        receivedResponse.setTotalSum(user.getTotalSum());
+        receivedResponse.setRemainingAmount(user.getPrincipalDebt() - user.getTotalSum());
+        receivedResponse.setPayment(userRepository.getUsersPaymentById(user.getId()));
+        return receivedResponse;
+    }
+
+
     @Override
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
         User user = getAuthentication();
-        mapper.updateUserProfile(profileUpdateRequest, user);
+        user.setUserName(profileUpdateRequest.name());
+        user.setPhotoUrl(user.getPhotoUrl());
+        user.setPhoneNumber(profileUpdateRequest.phoneNumber());
+        user.setGoal(profileUpdateRequest.goal());
         userRepository.save(user);
-        return mapper.toResponse(user);
+        return ProfileResponse.builder()
+                .id(user.getId())
+                .photoUrl(user.getPhotoUrl())
+                .goal(user.getGoal())
+                .name(user.getUsername())
+                .build();
     }
-
     @Override
     public ProfileResponse getUserById() {
         return mapper.toResponse(getAuthentication());

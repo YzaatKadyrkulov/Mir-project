@@ -8,9 +8,7 @@ import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
-import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
-import kg.mir.Mirproject.dto.userDto.ProfileResponse;
-import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
+import kg.mir.Mirproject.dto.userDto.*;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -130,5 +128,27 @@ public class UserApi {
     public ResponseEntity<Optional<UserWorldProfileResponse>> findUserById(@PathVariable Long id) {
         Optional<UserWorldProfileResponse> users = userService.findUserById(id);
         return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Получить всех пользователей, (получивший)",
+            description = "Возвращает список всех пользователей, которые что-то получили. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/allReceivedUsers")
+    public ResponseEntity<List<AllReceivedResponse>> getAllReceivedUsers() {
+        List<AllReceivedResponse> users = userService.getAllReceivedUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Получить пользователя по ID (получивший)",
+            description = "Возвращает пользователя, который что-то получил, по указанному ID. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/receivedUser/{id}")
+    public ResponseEntity<ReceivedResponse> getReceivedUserById(@PathVariable Long id) {
+        ReceivedResponse user = userService.getReceivedUserById(id);
+        return ResponseEntity.ok(user);
     }
 }

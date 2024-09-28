@@ -20,8 +20,11 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(name = "base_id_gen", sequenceName = "user_seq", allocationSize = 1)
-public class User extends BaseEntity implements UserDetails {
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
+    @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1,initialValue = 10)
+    private Long id;
     private String userName;
     private String phoneNumber;
     private String email;

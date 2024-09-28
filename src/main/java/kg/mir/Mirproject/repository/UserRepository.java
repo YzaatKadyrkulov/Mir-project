@@ -3,7 +3,9 @@ package kg.mir.Mirproject.repository;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
+import kg.mir.Mirproject.dto.userDto.AllReceivedResponse;
 import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
+import kg.mir.Mirproject.dto.userDto.UserPaymentResponse;
 import kg.mir.Mirproject.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +36,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse(u.userName, u.goal, p.status, p.sum ) FROM User u INNER JOIN u.payments p where u.id = :id")
     Optional<UserWorldProfileResponse> findUserById(Long id);
+
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserPaymentResponse(p.date, p.sum, p.status) " +
+            "FROM Payment p WHERE p.user.id = :id")
+    List<UserPaymentResponse> getUsersPaymentById(Long id);
+
+    @Query("SELECT new kg.mir.Mirproject.dto.submittedDto.SubmittedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'RECEIVED'")
+    List<AllReceivedResponse> getAllReceivedUsers();
+
+    @Query("select u from User u where u.verificationCode = ?1")
+    Optional<User> findByResetToken(String resetToken);
 }
