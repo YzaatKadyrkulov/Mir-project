@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileResponse;
@@ -17,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -103,5 +107,28 @@ public class UserApi {
     public ResponseEntity<List<GraduatedResponse>> getAllGraduatedUsers() {
         List<GraduatedResponse> users = userService.getAllGraduatedUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Получить всех пользователей по рейтингу",
+            description = "Получает всех пользователей из мира. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/getUsersFromWorldByRating")
+    public ResponseEntity<List<UserWorldResponse>> getUsersByTotalSumRange(@RequestParam int minAmount,
+                                                                           @RequestParam int maxAmount) {
+        List<UserWorldResponse> users = userService.getUsersByTotalSumRange(minAmount, maxAmount);
+        return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(
+            summary = "Получить пользователя ",
+            description = "Получает пользователей из мира. Доступны только пользователю с ролью 'ADMIN'."
+    )
+    @GetMapping("/getUserFromWorld/{id}")
+    public ResponseEntity<Optional<UserWorldProfileResponse>> findUserById(@PathVariable Long id) {
+        Optional<UserWorldProfileResponse> users = userService.findUserById(id);
+        return ResponseEntity.ok(users);
     }
 }

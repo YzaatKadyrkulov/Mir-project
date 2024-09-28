@@ -1,6 +1,8 @@
 package kg.mir.Mirproject.service.impl;
 
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileResponse;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +82,17 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(String query) {
         List<User> users = userRepository.findByUserName(query);
         return users.isEmpty() ? Collections.emptyList() : users;
+    }
+
+    @Override
+    public List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount) {
+        return userRepository.findByTotalSumBetween(minAmount, maxAmount);
+    }
+
+    @Override
+    public Optional<UserWorldProfileResponse> findUserById(Long id) {
+        return Optional.ofNullable(userRepository.findUserById(id)
+                .orElseThrow(() -> new NotFoundException("User with id: " + id + " not found")));
     }
 
     private User getAuthentication() {
