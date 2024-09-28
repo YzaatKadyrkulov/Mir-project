@@ -1,6 +1,8 @@
 package kg.mir.Mirproject.service;
 
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
+import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
 import kg.mir.Mirproject.dto.userDto.ProfileResponse;
@@ -8,6 +10,7 @@ import kg.mir.Mirproject.dto.userDto.ProfileUpdateRequest;
 import kg.mir.Mirproject.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest);
@@ -23,4 +26,8 @@ public interface UserService {
     List<GraduatedResponse> getAllGraduatedUsers();
 
     List<User> searchUsers(String query);
+
+    List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount);
+
+    Optional<UserWorldProfileResponse> findUserById(Long id);
 }
