@@ -15,8 +15,11 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(name = "base_id_gen", sequenceName = "payment_seq", allocationSize = 1)
-public class Payment extends BaseEntity {
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq")
+    @SequenceGenerator(name = "payment_seq", sequenceName = "payment_seq", allocationSize = 1,initialValue = 10)
+    private Long id;
     private LocalDate date;
     private Integer sum;
     @Enumerated(EnumType.STRING)

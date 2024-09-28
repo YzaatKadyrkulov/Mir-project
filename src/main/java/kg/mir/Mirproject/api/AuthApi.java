@@ -1,7 +1,9 @@
 package kg.mir.Mirproject.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
@@ -29,10 +31,21 @@ public class AuthApi {
     public AuthResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
+    @PostMapping("/forgot-password")
+    @Operation(
+            summary = "Метод для сброса пароля через электронную почту!",
+            description = "Этот метод отправляет пользователю ссылку для сброса пароля на указанный email." +
+                    " Права на метод имеют все!")
+    public SimpleResponse forgotPassword(@RequestParam("email") String email, @RequestParam("link") String link) {
+        return authService.forgotPassword(email, link);
+    }
 
-    @PreAuthorize("hasAuthority('USER')")
-    @PostMapping
-    public void resetPassword(String token, ResetPasswordRequest resetPasswordRequest) {
-        authService.resetPassword(token, resetPasswordRequest);
+    @PostMapping("/reset_password")
+    @Operation(
+            summary = "Метод для сброса пароля пользователя!",
+            description = "Этот метод позволяет пользователю установить новый пароль," +
+                    "используя ссылку, полученную по электронной почте. Доступ к методу имеют все!")
+    public SimpleResponse resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        return authService.resetPassword(request);
     }
 }

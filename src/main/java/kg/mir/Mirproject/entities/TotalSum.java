@@ -1,6 +1,9 @@
 package kg.mir.Mirproject.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -12,8 +15,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(name = "base_id_gen", sequenceName = "total_sum_seq", allocationSize = 1)
-public class TotalSum extends BaseEntity{
+public class TotalSum {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "base_id_gen")
+    @SequenceGenerator(name = "base_id_gen", sequenceName = "total_sum_seq", allocationSize = 1, initialValue = 10)
+    private Long id;
     private int totalSum;
     private int percent1;
     private int percent2;
