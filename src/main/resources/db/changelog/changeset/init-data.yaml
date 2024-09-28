@@ -52,17 +52,14 @@ databaseChangeLog:
                   name: id
                   value: 2
               - column:
-                  name: code
-                  value: "USR001"
-              - column:
                   name: email
-                  value: "user1@example.com"
+                  value: "user1@gmail.com"
               - column:
                   name: password
                   value: "password1"
               - column:
                   name: phone_number
-                  value: "+1234567890"
+                  value: "+996123456789"
               - column:
                   name: photo_url
                   value: "http://example.com/photos/user1.jpg"
@@ -89,26 +86,23 @@ databaseChangeLog:
                   name: id
                   value: 3
               - column:
-                  name: code
-                  value: "ADM001"
-              - column:
                   name: email
-                  value: "admin@example.com"
+                  value: "syma@gmail.com"
               - column:
                   name: password
                   value: "adminpass"
               - column:
                   name: phone_number
-                  value: "+0987654321"
+                  value: "+996987654321"  # Изменено на +996987654321
               - column:
                   name: photo_url
                   value: "http://example.com/photos/admin.jpg"
               - column:
                   name: role
-                  value: "ADMIN"
+                  value: "USER"
               - column:
                   name: user_name
-                  value: "Admin"
+                  value: "Syimyk"
               - column:
                   name: goal
                   value: 2000
