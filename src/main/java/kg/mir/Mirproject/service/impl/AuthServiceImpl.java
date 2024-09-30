@@ -21,11 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.thymeleaf.context.Context;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -64,22 +66,25 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(newUser);
         log.info("User with email: {} successfully signed up", signUpRequest.email());
 
-        String token = jwtService.generateToken(newUser);
+        Context context = new Context();
+        context.setVariable("username", newUser.getUsername());
+        context.setVariable("email", newUser.getEmail());
+        context.setVariable("password", password);
 
         try {
-            sendWelcomeEmail(newUser, password);
+            sendWelcomeEmail(context, newUser);
         } catch (Exception ex) {
             log.error("Error sending confirmation email to address: {}", newUser.getEmail(), ex);
         }
 
         return AuthResponse.builder()
-                .token(token)
+                .token(jwtService.generateToken(newUser))
                 .email(newUser.getEmail())
                 .role(newUser.getRole())
                 .build();
     }
 
-    private void sendWelcomeEmail(User newUser, String password) throws MessagingException {
+    private void sendWelcomeEmail(Context context, User newUser) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
@@ -114,7 +119,9 @@ public class AuthServiceImpl implements AuthService {
                         "</div>" +
                         "</body>" +
                         "</html>",
-                newUser.getUsername(), newUser.getEmail(), password
+                context.getVariable("username"),
+                context.getVariable("email"),
+                context.getVariable("password")
         );
 
         helper.setText(message, true);
@@ -123,7 +130,6 @@ public class AuthServiceImpl implements AuthService {
         javaMailSender.send(mimeMessage);
         log.info("Confirmation email sent to address: {}", newUser.getEmail());
     }
-
 
     @Override
     public AuthResponse signIn(SignInRequest signInRequest) {
@@ -154,6 +160,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(user.getRole())
                 .build();
     }
+
     @PostConstruct
     public void initSaveAdmin() {
         log.info("Attempting to save admin user");

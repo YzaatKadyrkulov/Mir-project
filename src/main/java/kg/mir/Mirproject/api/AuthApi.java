@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthApi {
     private final AuthService authService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/signUp")
     public AuthResponse signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
