@@ -8,11 +8,13 @@ import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
 import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
+import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Role;
 import kg.mir.Mirproject.exception.AlreadyExistsException;
 import kg.mir.Mirproject.exception.BadCredentialException;
 import kg.mir.Mirproject.exception.NotFoundException;
+import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.config.security.jwt.JwtService;
 import kg.mir.Mirproject.service.AuthService;
@@ -41,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final TotalSumRepo totalSumRepo;
 
     @Override
     public AuthResponse signUp(SignUpRequest signUpRequest) {
@@ -54,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         String password = generateRandomPassword();
         User newUser = User.builder()
                 .userName(signUpRequest.userName())
-                .totalSum(0)
+                .totalSum(signUpRequest.totalSum())
                 .principalDebt(0)
                 .goal(0)
                 .email(signUpRequest.email())
@@ -62,8 +65,17 @@ public class AuthServiceImpl implements AuthService {
                 .phoneNumber(signUpRequest.phoneNumber())
                 .role(Role.USER)
                 .build();
-
         userRepository.save(newUser);
+        if (check()){
+            TotalSum totalSum = new TotalSum();
+            totalSum.setId(5L);
+            totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
+            totalSumRepo.save(totalSum);
+        }else {
+            TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()->new NotFoundException("Total sum not found"));
+            totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
+            totalSumRepo.save(totalSum);
+        }
         log.info("User with email: {} successfully signed up", signUpRequest.email());
 
         Context context = new Context();
@@ -115,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
                         "<p>Ваш email: <strong>%s</strong></p>" +
                         "<p>Ваш пароль: <strong>%s</strong></p>" +
                         "<p>Мы рады приветствовать вас в нашем сообществе и ждем вас на нашем сайте.</p>" +
-                        "<a href=\"https://yourwebsite.com\" class=\"button\">Посетить сайт</a>" +
+                        "<a href=\"https://yourwebsite.com\" class=\"button\">Посетить наш сайт</a>" +
                         "</div>" +
                         "</body>" +
                         "</html>",
@@ -237,6 +249,14 @@ public class AuthServiceImpl implements AuthService {
             password.append(chars.charAt(index));
         }
         return password.toString();
+    }
+    private boolean check(){
+        for (TotalSum t : totalSumRepo.getAllTotalSum()){
+            if (t.getId().equals(5L)){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

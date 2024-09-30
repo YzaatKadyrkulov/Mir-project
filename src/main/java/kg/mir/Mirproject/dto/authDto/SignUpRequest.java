@@ -8,6 +8,7 @@ public record SignUpRequest(
         @EmailValidation
         String email,
         @PasswordValidation
-        String phoneNumber
+        String phoneNumber,
+        int totalSum
 ) {
 }

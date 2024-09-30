@@ -10,15 +10,6 @@ databaseChangeLog:
                   name: id
                   value: 1
               - column:
-                  name: percent1
-                  value: 10
-              - column:
-                  name: percent2
-                  value: 20
-              - column:
-                  name: percent3
-                  value: 30
-              - column:
                   name: total_sum
                   value: 100
 
@@ -28,15 +19,6 @@ databaseChangeLog:
               - column:
                   name: id
                   value: 2
-              - column:
-                  name: percent1
-                  value: 15
-              - column:
-                  name: percent2
-                  value: 25
-              - column:
-                  name: percent3
-                  value: 35
               - column:
                   name: total_sum
                   value: 150
