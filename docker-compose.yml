@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    image: mir-project
+    container_name: backend
+    ports:
+      - "80:2023"
+    environment:
+      APP_DATABASE_URL: jdbc:postgresql://database:5432/postgres
+      APP_DATABASE_USER: miruser
+      APP_DATABASE_PASS: mirpass
+      SERVER_PORT: 2023
+      SPRING_PROFILES_ACTIVE: dev
+  database:
+    image: postgres:latest
+    restart: always
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: miruser
+      POSTGRES_PASSWORD: mirpass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
