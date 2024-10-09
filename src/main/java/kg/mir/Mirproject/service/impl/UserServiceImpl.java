@@ -12,7 +12,6 @@ import kg.mir.Mirproject.mapper.UserMapper;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +23,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
@@ -67,6 +65,7 @@ public class UserServiceImpl implements UserService {
                 .name(user.getUsername())
                 .build();
     }
+
     @Override
     public ProfileResponse getUserById() {
         return mapper.toResponse(getAuthentication());
@@ -114,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount) {
-        return userRepository.findByTotalSumBetween(minAmount, maxAmount);
+        return userRepository.findByTotalSumRange(minAmount, maxAmount);
     }
 
     @Override

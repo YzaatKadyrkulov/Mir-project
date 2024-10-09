@@ -16,12 +16,9 @@ import lombok.*;
 @Entity
 @Table(name = "about_us")
 public class AboutUs {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "base_id_gen")
     @SequenceGenerator(name = "base_id_gen", sequenceName = "about_us_seq", allocationSize = 1,initialValue = 10)
-
     private Long id;
-
     private String information;
 }

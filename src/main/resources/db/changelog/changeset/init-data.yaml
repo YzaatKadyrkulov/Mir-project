@@ -41,7 +41,7 @@ databaseChangeLog:
                   value: "password1"
               - column:
                   name: phone_number
-                  value: "+996123456789"
+                  value: "+996703778025"
               - column:
                   name: photo_url
                   value: "http://example.com/photos/user1.jpg"
@@ -84,7 +84,7 @@ databaseChangeLog:
                   value: "USER"
               - column:
                   name: user_name
-                  value: "Syimyk"
+                  value: "Syimyk Beishekeev"
               - column:
                   name: goal
                   value: 2000

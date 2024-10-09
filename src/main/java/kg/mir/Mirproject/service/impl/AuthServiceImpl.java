@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
             totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
             totalSumRepo.save(totalSum);
         }else {
-            TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()->new NotFoundException("Total sum not found"));
+            TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
             totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
             totalSumRepo.save(totalSum);
         }
