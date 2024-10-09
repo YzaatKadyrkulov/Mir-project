@@ -1,5 +1,6 @@
 package kg.mir.Mirproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kg.mir.Mirproject.enums.Role;
 import kg.mir.Mirproject.enums.UserStatus;
@@ -41,6 +42,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = {REFRESH, REMOVE, MERGE})
+    @JsonIgnore
     private List<Payment> payments;
 
     @Override

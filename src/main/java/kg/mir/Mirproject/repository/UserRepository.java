@@ -4,8 +4,9 @@ import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.AllReceivedResponse;
-import kg.mir.Mirproject.dto.userDto.GraduatedResponse;
+import kg.mir.Mirproject.dto.userDto.GraduatedResponseOne;
 import kg.mir.Mirproject.dto.userDto.UserPaymentResponse;
+import kg.mir.Mirproject.dto.userDto.UserStatusResponse;
 import kg.mir.Mirproject.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,12 +27,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new kg.mir.Mirproject.dto.submittedDto.SubmittedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'SUBMITTED'")
     List<SubmittedResponse> getAllSubmittedUsers();
 
-    List<User> findByUserName(String userName);
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.userName, u.totalSum, u.photoUrl, u.userStatus) FROM User u WHERE u.userName LIKE CONCAT('%', :userName, '%')")
+    List<UserStatusResponse> findByUserName(@Param("userName") String userName);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.userDto.GraduatedResponse(u.userName, u.totalSum, u.photoUrl) FROM User u where u.userStatus = 'FINISHED'")
-    List<GraduatedResponse> getAllGraduatedUsers();
-
-    Optional<User> findByEmail(String email);
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.GraduatedResponseOne(u.userName, u.totalSum, u.photoUrl) FROM User u where u.userStatus = 'FINISHED'")
+    List<GraduatedResponseOne> getAllGraduatedUsers();
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.userName, u.email, u.phoneNumber, u.totalSum) " +
             "FROM User u WHERE u.totalSum BETWEEN :minAmount AND :maxAmount " +

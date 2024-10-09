@@ -10,6 +10,7 @@ import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
 import kg.mir.Mirproject.entities.User;
+import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -91,9 +92,13 @@ public class UserApi {
             description = "Ищет получившего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
     )
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("query") String query) {
-        List<User> users = userService.searchUsers(query);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<?> searchUsers(@RequestParam("query") String query) {
+        try {
+            List<List<UserStatusResponse>> users = userService.searchUsers(query);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
@@ -102,8 +107,8 @@ public class UserApi {
             description = "Получает всех закончивших пользователей. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
     )
     @GetMapping("/getAllGraduatedUsers")
-    public ResponseEntity<List<GraduatedResponse>> getAllGraduatedUsers() {
-        List<GraduatedResponse> users = userService.getAllGraduatedUsers();
+    public ResponseEntity<List<GraduatedResponseOne>> getAllGraduatedUsers() {
+        List<GraduatedResponseOne> users = userService.getAllGraduatedUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

@@ -100,17 +100,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<GraduatedResponse> getAllGraduatedUsers() {
-        List<GraduatedResponse> users = userRepository.getAllGraduatedUsers();
+    public List<GraduatedResponseOne> getAllGraduatedUsers() {
+        List<GraduatedResponseOne> users = userRepository.getAllGraduatedUsers();
         return users.isEmpty() ? Collections.emptyList() : users;
     }
 
     @Override
-    public List<User> searchUsers(String query) {
-        List<User> users = userRepository.findByUserName(query);
-        return users.isEmpty() ? Collections.emptyList() : users;
-    }
+    public List<List<UserStatusResponse>> searchUsers(String query) throws NotFoundException {
+        List<UserStatusResponse> allUsers = userRepository.findByUserName(query);
 
+        if (allUsers.isEmpty()) {
+            throw new NotFoundException("Users not found");
+        }
+
+        List<UserStatusResponse> receivedUsers = allUsers.stream()
+                .filter(user -> user.userStatus() == UserStatus.RECEIVED)
+                .toList();
+
+        List<UserStatusResponse> finishedUsers = allUsers.stream()
+                .filter(user -> user.userStatus() == UserStatus.FINISHED)
+                .toList();
+
+        List<UserStatusResponse> submittedUsers = allUsers.stream()
+                .filter(user -> user.userStatus() == UserStatus.SUBMITTED)
+                .toList();
+
+        return List.of(receivedUsers, finishedUsers, submittedUsers);
+    }
     @Override
     public List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount) {
         return userRepository.findByTotalSumRange(minAmount, maxAmount);

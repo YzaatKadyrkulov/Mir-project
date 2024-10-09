@@ -21,9 +21,9 @@ public interface UserService {
 
     SimpleResponse changeUserStatusToSubmitted();
 
-    List<GraduatedResponse> getAllGraduatedUsers();
+    List<GraduatedResponseOne> getAllGraduatedUsers();
 
-    List<User> searchUsers(String query);
+    List<List<UserStatusResponse>> searchUsers(String query);
 
     List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount);
 
