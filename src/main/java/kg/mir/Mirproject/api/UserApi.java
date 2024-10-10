@@ -7,9 +7,10 @@ import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
+import kg.mir.Mirproject.dto.payment.PaymentRequest;
+import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
-import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -156,4 +156,5 @@ public class UserApi {
         ReceivedResponse user = userService.getReceivedUserById(id);
         return ResponseEntity.ok(user);
     }
+
 }
