@@ -45,7 +45,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "FROM Payment p WHERE p.user.id = :id")
     List<UserPaymentResponse> getUsersPaymentById(Long id);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.submittedDto.SubmittedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'RECEIVED'")
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.AllReceivedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'RECEIVED'")
     List<AllReceivedResponse> getAllReceivedUsers();
 
     @Query("select u from User u where u.verificationCode = ?1")
