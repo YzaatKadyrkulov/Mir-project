@@ -44,11 +44,18 @@ public class UserServiceImpl implements UserService {
     public ReceivedResponse getReceivedUserById(Long id) {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+        if (user.getPrincipalDebt() <= 0){
             return ReceivedResponse.builder().userName(user.getUsername()).photoUrl(user.getPhotoUrl())
-                    .totalSum(user.getTotalSum()).remainingAmount(user.getPrincipalDebt() - user.getTotalSum())
-                    .principalDebt(user.getPrincipalDebt())
+                    .totalSum(0).remainingAmount(0).principalDebt(0)
                     .payment(userRepository.getUsersPaymentById(user.getId())).build();
+        }
+        return ReceivedResponse.builder()
+                .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
+                .principalDebt(user.getPrincipalDebt()).totalSum(user.getTotalSum())
+                .remainingAmount(user.getPrincipalDebt() - user.getTotalSum())
+                .payment(userRepository.getUsersPaymentById(user.getId())).build();
     }
+
 
     @Override
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
