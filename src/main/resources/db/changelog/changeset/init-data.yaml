@@ -23,6 +23,7 @@ databaseChangeLog:
                   name: total_sum
                   value: 150
 
+
   - changeSet:
       id: init-test-data-users-table
       author: Bektur777
@@ -60,6 +61,9 @@ databaseChangeLog:
               - column:
                   name: total_sum
                   value: 1500
+              - column:
+                  name: paid_debt
+                  value: 0
 
         - insert:
             tableName: users
@@ -94,6 +98,9 @@ databaseChangeLog:
               - column:
                   name: total_sum
                   value: 3000
+              - column:
+                  name: paid_debt
+                  value: 0
 
   - changeSet:
       id: init-test-data-payments-table

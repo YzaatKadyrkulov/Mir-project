@@ -1,12 +1,16 @@
 package kg.mir.Mirproject.service.impl;
 
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.WorldDto.DebtRequest;
+import kg.mir.Mirproject.dto.WorldDto.DebtResponse;
+import kg.mir.Mirproject.dto.WorldUserResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.entities.Payment;
 import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Status;
+import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
@@ -51,10 +55,13 @@ public class PaymentServiceImpl implements PaymentService {
         user.getPayments().add(payment);
         user.setTotalSum(user.getTotalSum() + paymentRequest.sum());
         user.setPrincipalDebt(user.getPrincipalDebt() - paymentRequest.sum());
-        userRepository.save(user);
+        if (user.getPrincipalDebt() <= 0 ){
+            user.setUserStatus(UserStatus.FINISHED);
+        }
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
         totalSum.setTotalSum(totalSum.getTotalSum() + paymentRequest.sum());
         totalSumRepo.save(totalSum);
+        userRepository.save(user);
         return SimpleResponse.builder().message("successfully added").httpStatus(HttpStatus.OK).build();
     }
 
@@ -80,4 +87,36 @@ public class PaymentServiceImpl implements PaymentService {
         return SimpleResponse.builder().message("successfully refund user sum").httpStatus(HttpStatus.OK).build();
     }
 
+    @Override
+    public WorldUserResponse getUserWorldById(Long id) {
+        User user = userRepository.getUserById(id)
+                .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+       return WorldUserResponse.builder()
+                .photoUrl(user.getPhotoUrl())
+                .userName(user.getUsername())
+                .userTotalSum(user.getTotalSum())
+                .userGoal(user.getGoal()).build();
+
+    }
+
+    @Override
+    public DebtResponse giveDebtToUser(Long id, DebtRequest debtRequest) {
+        User user = userRepository.getUserById(id)
+                .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
+        totalSum.setTotalSum(totalSum.getTotalSum() - (debtRequest.debtSum() - user.getTotalSum()));
+        totalSumRepo.save(totalSum);
+        int debt = (debtRequest.debtSum() - user.getTotalSum());
+        int sixPercent = (debt * 6) / 100;
+        user.setPrincipalDebt(user.getPrincipalDebt()+(debt + sixPercent));
+        user.setUserStatus(UserStatus.RECEIVED);
+        userRepository.save(user);
+        return DebtResponse.builder()
+                .debtSum(debt + " " + "(+" + sixPercent + ") сом")
+                .employees(((debt * 3) / 100) + " сом")
+                .insurance(((debt * 2) / 100) + " сом")
+                .program(((debt) / 100) + " сом")
+                .build();
+
+    }
 }

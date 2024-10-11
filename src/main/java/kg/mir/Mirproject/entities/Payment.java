@@ -25,6 +25,6 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne(cascade = {REFRESH})
+    @ManyToOne(cascade = {REFRESH,MERGE})
     private User user;
 }

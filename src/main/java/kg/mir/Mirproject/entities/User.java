@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private int totalSum;
     private int goal;
     private String verificationCode;
-    private Boolean isVerified;
+    private int paidDebt;
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
     @Enumerated(EnumType.STRING)
