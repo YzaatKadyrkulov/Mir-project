@@ -10,7 +10,5 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     ProfileResponse toResponse(User user);
-
-    void updateUserProfile(ProfileUpdateRequest profileUpdateRequest, @MappingTarget User user);
 }
 

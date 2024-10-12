@@ -11,7 +11,9 @@ import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Status;
 import kg.mir.Mirproject.enums.UserStatus;
+import kg.mir.Mirproject.exception.BadRequestException;
 import kg.mir.Mirproject.exception.NotFoundException;
+import kg.mir.Mirproject.repository.PaymentRepo;
 import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.service.PaymentService;
@@ -25,6 +27,7 @@ import java.time.LocalDate;
 public class PaymentServiceImpl implements PaymentService {
     private final UserRepository userRepository;
     private final TotalSumRepo totalSumRepo;
+    private final PaymentRepo paymentRepo;
     @Override
     public SimpleResponse payDebtsOfUser(Long id, PaymentRequest paymentRequest) {
         User user = userRepository.getUserById(id)
@@ -37,6 +40,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
+            paymentRepo.save(payment);
             return SimpleResponse.builder().message("successfully added").httpStatus(HttpStatus.OK).build();
         }
         if (paymentRequest.status().equals(Status.WAITING)) {
@@ -46,6 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
+            paymentRepo.save(payment);
             return SimpleResponse.builder().message("successfully added").httpStatus(HttpStatus.OK).build();
         }
         payment.setSum(paymentRequest.sum());
@@ -53,15 +58,15 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setUser(user);
         payment.setDate(LocalDate.now());
         user.getPayments().add(payment);
-        user.setTotalSum(user.getTotalSum() + paymentRequest.sum());
-        user.setPrincipalDebt(user.getPrincipalDebt() - paymentRequest.sum());
-        if (user.getPrincipalDebt() <= 0 ){
+        user.setPaidDebt(user.getPaidDebt() + paymentRequest.sum());
+        if (user.getPrincipalDebt() <= user.getPaidDebt() ){
             user.setUserStatus(UserStatus.FINISHED);
         }
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
         totalSum.setTotalSum(totalSum.getTotalSum() + paymentRequest.sum());
         totalSumRepo.save(totalSum);
         userRepository.save(user);
+        paymentRepo.save(payment);
         return SimpleResponse.builder().message("successfully added").httpStatus(HttpStatus.OK).build();
     }
 
@@ -104,6 +109,9 @@ public class PaymentServiceImpl implements PaymentService {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
+        if(totalSum.getTotalSum() < debtRequest.debtSum()){
+            throw  new BadRequestException("Debt sum is too low");
+        }
         totalSum.setTotalSum(totalSum.getTotalSum() - (debtRequest.debtSum() - user.getTotalSum()));
         totalSumRepo.save(totalSum);
         int debt = (debtRequest.debtSum() - user.getTotalSum());

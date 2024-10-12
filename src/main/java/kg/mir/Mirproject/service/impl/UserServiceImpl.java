@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,15 +45,11 @@ public class UserServiceImpl implements UserService {
     public ReceivedResponse getReceivedUserById(Long id) {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
-        if (user.getPrincipalDebt() <= 0){
-            return ReceivedResponse.builder().userName(user.getUsername()).photoUrl(user.getPhotoUrl())
-                    .totalSum(0).remainingAmount(0).principalDebt(0)
-                    .payment(userRepository.getUsersPaymentById(user.getId())).build();
-        }
         return ReceivedResponse.builder()
+                .id(user.getId())
                 .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
-                .principalDebt(user.getPrincipalDebt()).totalSum(user.getTotalSum())
-                .remainingAmount(user.getPrincipalDebt() - user.getTotalSum())
+                .principalDebt(user.getPrincipalDebt()+" сом").payDebt(user.getPaidDebt()+" сом")
+                .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()) + " сом")
                 .payment(userRepository.getUsersPaymentById(user.getId())).build();
     }
 
@@ -108,8 +105,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<GraduatedResponseOne> getAllGraduatedUsers() {
-        List<GraduatedResponseOne> users = userRepository.getAllGraduatedUsers();
-        return users.isEmpty() ? Collections.emptyList() : users;
+        List<GraduatedResponseOne> users = new ArrayList<>();
+        List<User> all = userRepository.findAll();
+        for(User user : all){
+            if (user.getUserStatus().equals(UserStatus.FINISHED)){
+                GraduatedResponseOne finishedUser = GraduatedResponseOne.builder()
+                        .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
+                        .totalSum(user.getTotalSum()+user.getPaidDebt()+" сом").build();
+                users.add(finishedUser);
+            }
+        }
+        return users;
     }
 
     @Override
