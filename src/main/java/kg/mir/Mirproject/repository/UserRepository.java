@@ -33,8 +33,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.userName, u.email, u.phoneNumber, u.totalSum) " +
             "FROM User u WHERE u.totalSum BETWEEN :minAmount AND :maxAmount " +
             "AND u.userStatus = 'MIR' " +
+            "AND u.role = 'USER' " +
             "ORDER BY u.totalSum ASC")
     List<UserWorldResponse> findByTotalSumRange(@Param("minAmount") int minAmount, @Param("maxAmount") int maxAmount);
+
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse(u.userName, u.goal, p.status, p.sum ) " +
             "FROM User u INNER JOIN u.payments p WHERE u.id = :id AND u.userStatus = 'MIR'")

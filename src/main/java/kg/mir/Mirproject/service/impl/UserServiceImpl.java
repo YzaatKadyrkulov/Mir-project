@@ -108,12 +108,17 @@ public class UserServiceImpl implements UserService {
         List<GraduatedResponseOne> users = new ArrayList<>();
         List<User> all = userRepository.findAll();
         for(User user : all){
-            if (user.getUserStatus().equals(UserStatus.FINISHED)){
+            if (user.getUserStatus() != null && user.getUserStatus().equals(UserStatus.FINISHED)){
                 GraduatedResponseOne finishedUser = GraduatedResponseOne.builder()
-                        .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
-                        .totalSum(user.getTotalSum()+user.getPaidDebt()+" сом").build();
+                        .userName(user.getUsername())
+                        .photoUrl(user.getPhotoUrl())
+                        .totalSum(user.getTotalSum() + user.getPaidDebt() + " сом")
+                        .build();
                 users.add(finishedUser);
             }
+        }
+        if (users.isEmpty()) {
+            throw new NotFoundException("Пока нет закончивших пользователей");
         }
         return users;
     }
