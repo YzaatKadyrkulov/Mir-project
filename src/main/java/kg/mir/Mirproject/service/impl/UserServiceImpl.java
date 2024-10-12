@@ -117,9 +117,6 @@ public class UserServiceImpl implements UserService {
                 users.add(finishedUser);
             }
         }
-        if (users.isEmpty()) {
-            throw new NotFoundException("Пока нет закончивших пользователей");
-        }
         return users;
     }
 
