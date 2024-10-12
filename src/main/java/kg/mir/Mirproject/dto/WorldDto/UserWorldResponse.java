@@ -11,7 +11,7 @@ public class UserWorldResponse {
     private String userName;
     private String email;
     private String phoneNumber;
-    private int goal;
+    private int totalSum;
 }
 
 
