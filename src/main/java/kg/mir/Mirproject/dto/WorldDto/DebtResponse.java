@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record DebtResponse(
         String debtSum,
-        String employees,
-        String insurance,
-        String program) {
+        int employees,
+        int insurance,
+        int program) {
 }

@@ -120,10 +120,10 @@ public class PaymentServiceImpl implements PaymentService {
         user.setUserStatus(UserStatus.RECEIVED);
         userRepository.save(user);
         return DebtResponse.builder()
-                .debtSum(debt + " " + "(+" + sixPercent + ") сом")
-                .employees(((debt * 3) / 100) + " сом")
-                .insurance(((debt * 2) / 100) + " сом")
-                .program(((debt) / 100) + " сом")
+                .debtSum(debt + " " + "(+" + sixPercent + ")")
+                .employees(((debt * 3) / 100))
+                .insurance(((debt * 2) / 100))
+                .program(((debt) / 100))
                 .build();
 
     }

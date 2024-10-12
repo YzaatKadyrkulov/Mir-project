@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
         return ReceivedResponse.builder()
                 .id(user.getId())
                 .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
-                .principalDebt(user.getPrincipalDebt()+" сом").payDebt(user.getPaidDebt()+" сом")
-                .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()) + " сом")
+                .principalDebt(user.getPrincipalDebt()).payDebt(user.getPaidDebt())
+                .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()))
                 .payment(userRepository.getUsersPaymentById(user.getId())).build();
     }
 
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
                 GraduatedResponseOne finishedUser = GraduatedResponseOne.builder()
                         .userName(user.getUsername())
                         .photoUrl(user.getPhotoUrl())
-                        .totalSum(user.getTotalSum() + user.getPaidDebt() + " сом")
+                        .totalSum(user.getTotalSum() + user.getPaidDebt())
                         .build();
                 users.add(finishedUser);
             }

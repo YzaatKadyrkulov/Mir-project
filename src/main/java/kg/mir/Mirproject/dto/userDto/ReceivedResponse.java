@@ -14,9 +14,9 @@ public class ReceivedResponse {
     private Long id;
     private String userName;
     private String photoUrl;
-    private String principalDebt;
-    private String payDebt;
-    private String remainingAmount;
+    private int principalDebt;
+    private int payDebt;
+    private int remainingAmount;
     private List<UserPaymentResponse> payment;
 
 }

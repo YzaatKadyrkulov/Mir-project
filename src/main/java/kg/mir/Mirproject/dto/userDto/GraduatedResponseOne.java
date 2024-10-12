@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record GraduatedResponseOne(
         String userName,
-        String totalSum,
+        int totalSum,
         String photoUrl
 ) {
 }
