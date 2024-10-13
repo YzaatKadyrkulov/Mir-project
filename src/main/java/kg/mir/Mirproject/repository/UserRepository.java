@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new kg.mir.Mirproject.dto.submittedDto.SubmittedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'SUBMITTED'")
     List<SubmittedResponse> getAllSubmittedUsers();
 
-    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.userName, u.totalSum, u.photoUrl, u.userStatus) FROM User u WHERE u.userName LIKE CONCAT('%', :userName, '%')")
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.userName, u.totalSum, u.photoUrl, u.userStatus) FROM User u WHERE u.userName LIKE CONCAT('%', :userName, '%')")
     List<UserStatusResponse> findByUserName(@Param("userName") String userName);
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.userName, u.email, u.phoneNumber, u.totalSum) " +

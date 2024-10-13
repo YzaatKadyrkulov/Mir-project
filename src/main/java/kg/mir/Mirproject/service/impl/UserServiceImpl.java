@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("User " + user.getUsername() + " successfully deleted")
+                .message("User status successfully changed to submitted")
                 .build();
     }
 
@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
         for(User user : all){
             if (user.getUserStatus() != null && user.getUserStatus().equals(UserStatus.FINISHED)){
                 GraduatedResponseOne finishedUser = GraduatedResponseOne.builder()
+                        .id(user.getId())
                         .userName(user.getUsername())
                         .photoUrl(user.getPhotoUrl())
                         .totalSum(user.getTotalSum() + user.getPaidDebt())

@@ -97,6 +97,7 @@ public class PaymentServiceImpl implements PaymentService {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
        return WorldUserResponse.builder()
+               .id(user.getId())
                 .photoUrl(user.getPhotoUrl())
                 .userName(user.getUsername())
                 .userTotalSum(user.getTotalSum())
