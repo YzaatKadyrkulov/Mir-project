@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserWorldResponse {
+    private Long id;
     private String userName;
     private String email;
     private String phoneNumber;

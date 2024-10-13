@@ -18,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq")
-    @SequenceGenerator(name = "payment_seq", sequenceName = "payment_seq", allocationSize = 1,initialValue = 10)
+    @SequenceGenerator(name = "payment_seq", sequenceName = "payment_seq", allocationSize = 1,initialValue = 20)
     private Long id;
     private LocalDate date;
     private Integer sum;

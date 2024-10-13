@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.userName, u.totalSum, u.photoUrl, u.userStatus) FROM User u WHERE u.userName LIKE CONCAT('%', :userName, '%')")
     List<UserStatusResponse> findByUserName(@Param("userName") String userName);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.userName, u.email, u.phoneNumber, u.totalSum) " +
+    @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.id,u.userName, u.email, u.phoneNumber, u.totalSum) " +
             "FROM User u WHERE u.totalSum BETWEEN :minAmount AND :maxAmount " +
             "AND u.userStatus = 'MIR' " +
             "AND u.role = 'USER' " +
