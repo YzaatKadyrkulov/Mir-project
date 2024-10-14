@@ -1,14 +1,18 @@
 package kg.mir.Mirproject.service.impl;
 
+import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
+import kg.mir.Mirproject.dto.WorldUserResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
+import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.mapper.UserMapper;
+import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper mapper;
+    private final TotalSumRepo totalSumRepo;
 
     @Override
     public List<AllReceivedResponse> getAllReceivedUsers() {
@@ -44,6 +48,16 @@ public class UserServiceImpl implements UserService {
                 .principalDebt(user.getPrincipalDebt()).payDebt(user.getPaidDebt())
                 .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()))
                 .payment(userRepository.getUsersPaymentById(user.getId())).build();
+    }
+
+    @Override
+    public AdminResponse getAdminProfileById() {
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
+        List<UserWorldResponse> users = userRepository.getAllWorldUsers();
+        if (users.isEmpty()){
+            return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(Collections.emptyList()).build();
+        }
+        return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(userRepository.getAllWorldUsers()).build();
     }
 
 

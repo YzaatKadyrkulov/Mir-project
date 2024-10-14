@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
+import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -155,6 +156,16 @@ public class UserApi {
     public ResponseEntity<ReceivedResponse> getReceivedUserById(@PathVariable Long id) {
         ReceivedResponse user = userService.getReceivedUserById(id);
         return ResponseEntity.ok(user);
+    }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(
+            summary = "Получить профиль администратора",
+            description = "Возвращает профиль администратора с глобальной суммой и списком пользователей. Доступно только пользователю с ролью 'ADMIN'."
+    )
+    @GetMapping("/adminProfile")
+    public ResponseEntity<AdminResponse> getAdminProfileById() {
+        AdminResponse adminResponse = userService.getAdminProfileById();
+        return ResponseEntity.ok(adminResponse);
     }
 
 }

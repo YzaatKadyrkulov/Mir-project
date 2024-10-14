@@ -1,10 +1,9 @@
 package kg.mir.Mirproject.service;
 
+import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
-import kg.mir.Mirproject.dto.payment.PaymentRequest;
-import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
 
@@ -33,5 +32,6 @@ public interface UserService {
     List<AllReceivedResponse> getAllReceivedUsers();
 
     ReceivedResponse getReceivedUserById(Long id);
+    AdminResponse getAdminProfileById();
 
 }
