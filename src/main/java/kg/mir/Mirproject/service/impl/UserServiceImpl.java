@@ -3,18 +3,12 @@ package kg.mir.Mirproject.service.impl;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
-import kg.mir.Mirproject.dto.payment.PaymentRequest;
-import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
-import kg.mir.Mirproject.entities.Payment;
-import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
-import kg.mir.Mirproject.enums.Status;
 import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.mapper.UserMapper;
-import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,8 +66,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileResponse getUserById() {
-        return mapper.toResponse(getAuthentication());
+        User user = getAuthentication();
+        return ProfileResponse.builder()
+                .id(user.getId())
+                .photoUrl(user.getPhotoUrl())
+                .name(user.getUsername())
+                .number(user.getPhoneNumber())
+                .goal(user.getGoal())
+                .build();
     }
+
 
     @Override
     public SimpleResponse deleteUserById(Long id) {
