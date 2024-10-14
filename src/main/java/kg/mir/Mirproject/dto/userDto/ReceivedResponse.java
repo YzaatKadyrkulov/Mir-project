@@ -18,5 +18,4 @@ public class ReceivedResponse {
     private int payDebt;
     private int remainingAmount;
     private List<UserPaymentResponse> payment;
-
 }

@@ -64,6 +64,9 @@ databaseChangeLog:
               - column:
                   name: paid_debt
                   value: 0
+#              - column:
+#                  name: user_status
+#                  value: "FINISHED"
 
         - insert:
             tableName: users
@@ -101,6 +104,9 @@ databaseChangeLog:
               - column:
                   name: paid_debt
                   value: 0
+#              - column:
+#                  name: user_status
+#                  value: "SUBMITTED"
 
   - changeSet:
       id: init-test-data-payments-table

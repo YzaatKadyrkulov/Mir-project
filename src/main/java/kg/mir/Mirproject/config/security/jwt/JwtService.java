@@ -48,5 +48,4 @@ public class JwtService {
         return userRepository.getUserByEmail(email).orElseThrow(() ->
                 new NotFoundException("Пользователь с почтой %s не найден!".formatted(email)));
     }
-
 }

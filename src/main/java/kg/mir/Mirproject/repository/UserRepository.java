@@ -5,10 +5,10 @@ import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.WorldUserResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.AllReceivedResponse;
-import kg.mir.Mirproject.dto.userDto.GraduatedResponseOne;
 import kg.mir.Mirproject.dto.userDto.UserPaymentResponse;
 import kg.mir.Mirproject.dto.userDto.UserStatusResponse;
 import kg.mir.Mirproject.entities.User;
+import kg.mir.Mirproject.enums.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -56,4 +56,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.verificationCode = ?1")
     Optional<User> findByResetToken(String resetToken);
+
+    void deleteAllByUserStatus(UserStatus userStatus);
 }

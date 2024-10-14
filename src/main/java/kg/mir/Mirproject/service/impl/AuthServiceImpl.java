@@ -11,7 +11,6 @@ import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
 import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Role;
-import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.AlreadyExistsException;
 import kg.mir.Mirproject.exception.BadCredentialException;
 import kg.mir.Mirproject.exception.NotFoundException;
@@ -35,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static java.lang.String.format;
-import static kg.mir.Mirproject.enums.UserStatus.MIR;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +61,6 @@ public class AuthServiceImpl implements AuthService {
                 .principalDebt(0)
                 .goal(0)
                 .paidDebt(0)
-                .userStatus(MIR)
                 .email(signUpRequest.email())
                 .password(passwordEncoder.encode(password))
                 .phoneNumber(signUpRequest.phoneNumber())

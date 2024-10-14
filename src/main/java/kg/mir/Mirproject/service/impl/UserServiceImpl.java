@@ -1,5 +1,6 @@
 package kg.mir.Mirproject.service.impl;
 
+import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
@@ -60,6 +61,11 @@ public class UserServiceImpl implements UserService {
         return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(userRepository.getAllWorldUsers()).build();
     }
 
+    @Override
+    @Transactional
+    public void clearUsersByStatus(UserStatus userStatus) {
+        userRepository.deleteAllByUserStatus(userStatus);
+    }
 
     @Override
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
