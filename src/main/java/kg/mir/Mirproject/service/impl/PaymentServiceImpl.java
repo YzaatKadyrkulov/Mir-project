@@ -106,25 +106,23 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public DebtResponse giveDebtToUser(Long id, DebtRequest debtRequest) {
+    public SimpleResponse giveDebtToUser(Long id, DebtRequest debtRequest) {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
         if(totalSum.getTotalSum() < debtRequest.debtSum()){
             throw  new BadRequestException("Debt sum is too low");
         }
-        totalSum.setTotalSum(totalSum.getTotalSum() - (debtRequest.debtSum() - user.getTotalSum()));
-        totalSumRepo.save(totalSum);
-        int debt = (debtRequest.debtSum() - user.getTotalSum());
-        int sixPercent = (debt * 6) / 100;
-        user.setPrincipalDebt(user.getPrincipalDebt()+(debt + sixPercent));
+        user.setPrincipalDebt(debtRequest.debtSum());
         user.setUserStatus(UserStatus.RECEIVED);
         userRepository.save(user);
-        return DebtResponse.builder()
-                .debtSum(debt + " " + "(+" + sixPercent + ")")
-                .employees(((debt * 3) / 100))
-                .insurance(((debt * 2) / 100))
-                .program(((debt) / 100))
+        int debt = debtRequest.debtSum();
+        debt = debt - ((debt * 6) / 100);
+        totalSum.setTotalSum(totalSum.getTotalSum() - debt);
+        totalSumRepo.save(totalSum);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Основной долг "+user.getUsername()+" составляет "+user.getPrincipalDebt()+" сома")
                 .build();
 
     }

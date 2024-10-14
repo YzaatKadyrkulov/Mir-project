@@ -8,12 +8,11 @@ import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
 
 public interface PaymentService {
+
     SimpleResponse payDebtsOfUser(Long userId, PaymentRequest paymentRequest);
-
     SimpleResponse addSumToUser(SumRequest sumRequest);
-
     SimpleResponse refundAllSumOfUser(SumRequest sumRequest);
     WorldUserResponse getUserWorldById(Long userId);
-    DebtResponse giveDebtToUser(Long id, DebtRequest debtRequest);
+    SimpleResponse giveDebtToUser(Long id, DebtRequest debtRequest);
 }
 

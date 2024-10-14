@@ -75,9 +75,9 @@ public class PaymentApi {
             description = "Выдает долг пользователю по указанному ID. Доступно только пользователю с ролью 'ADMIN'."
     )
     @PostMapping("/{userId}/giveDebt")
-    public ResponseEntity<DebtResponse> giveDebtToUser(@PathVariable Long userId,
+    public ResponseEntity<SimpleResponse> giveDebtToUser(@PathVariable Long userId,
                                                        @RequestBody @Valid DebtRequest debtRequest) {
-        DebtResponse response = paymentService.giveDebtToUser(userId, debtRequest);
+        SimpleResponse response = paymentService.giveDebtToUser(userId, debtRequest);
         return ResponseEntity.ok(response);
     }
 }
