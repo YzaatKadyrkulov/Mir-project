@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return ProfileResponse.builder()
                 .id(user.getId())
+                .number(user.getPhoneNumber())
                 .photoUrl(user.getPhotoUrl())
                 .goal(user.getGoal())
                 .name(user.getUsername())

@@ -7,5 +7,6 @@ public record ProfileResponse(
         Long id,
         String photoUrl,
         String name,
+        String number,
         int goal
 ) { }
