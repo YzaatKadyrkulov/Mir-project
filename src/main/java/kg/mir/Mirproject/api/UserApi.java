@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
-import kg.mir.Mirproject.dto.payment.PaymentRequest;
-import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
+import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -157,4 +156,14 @@ public class UserApi {
         return ResponseEntity.ok(user);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(
+            summary = "Очистить пользователей по статусу",
+            description = "Удаляет всех пользователей с указанным статусом. Доступно только пользователю с ролью 'ADMIN'."
+    )
+    @DeleteMapping("/clearUserByStatus")
+    public ResponseEntity<String> clearUserByStatus(@RequestParam UserStatus status) {
+        userService.clearUsersByStatus(status);
+        return ResponseEntity.ok("Users with status: " + status + " were removed");
+    }
 }

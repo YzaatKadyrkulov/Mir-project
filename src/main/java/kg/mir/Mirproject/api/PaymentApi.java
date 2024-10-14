@@ -10,7 +10,6 @@ import kg.mir.Mirproject.dto.WorldUserResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.service.PaymentService;
-import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class PaymentApi {
     private final PaymentService paymentService;
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Добавить платеж к пользователю (закрывать долги)",

@@ -1,5 +1,6 @@
 package kg.mir.Mirproject.service.impl;
 
+import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -46,6 +47,11 @@ public class UserServiceImpl implements UserService {
                 .payment(userRepository.getUsersPaymentById(user.getId())).build();
     }
 
+    @Override
+    @Transactional
+    public void clearUsersByStatus(UserStatus userStatus) {
+        userRepository.deleteAllByUserStatus(userStatus);
+    }
 
     @Override
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {

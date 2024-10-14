@@ -4,10 +4,10 @@ import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.AllReceivedResponse;
-import kg.mir.Mirproject.dto.userDto.GraduatedResponseOne;
 import kg.mir.Mirproject.dto.userDto.UserPaymentResponse;
 import kg.mir.Mirproject.dto.userDto.UserStatusResponse;
 import kg.mir.Mirproject.entities.User;
+import kg.mir.Mirproject.enums.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +37,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ORDER BY u.totalSum ASC")
     List<UserWorldResponse> findByTotalSumRange(@Param("minAmount") int minAmount, @Param("maxAmount") int maxAmount);
 
-
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse(u.userName, u.goal, p.status, p.sum ) " +
             "FROM User u INNER JOIN u.payments p WHERE u.id = :id AND u.userStatus = 'MIR'")
     Optional<UserWorldProfileResponse> findUserById(Long id);
@@ -51,4 +50,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.verificationCode = ?1")
     Optional<User> findByResetToken(String resetToken);
+
+    void deleteAllByUserStatus(UserStatus userStatus);
 }
