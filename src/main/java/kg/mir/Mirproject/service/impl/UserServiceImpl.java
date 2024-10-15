@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ReceivedResponse getReceivedUserById(Long id) {
         User user = userRepository.getUserById(id)
-                .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         return ReceivedResponse.builder()
                 .id(user.getId())
                 .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AdminResponse getAdminProfileById() {
-        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Total sum not found"));
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Общая сумма не найдена"));
         List<UserWorldResponse> users = userRepository.getAllWorldUsers();
         if (users.isEmpty()) {
             return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(Collections.emptyList()).build();
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public List<UserStatusResponse> searchReceivedUser(String query) {
         List<UserStatusResponse> result = userRepository.searchReceivedUser(query);
         if (result.isEmpty()) {
-            throw new NotFoundException("No received users found with the query: " + query);
+            throw new NotFoundException("Не найдено полученных пользователей по запросу: " + query);
         }
         return result;
     }
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     public List<UserStatusResponse> searchFinishedUser(String query) {
         List<UserStatusResponse> result = userRepository.searchFinishedUser(query);
         if (result.isEmpty()) {
-            throw new NotFoundException("No finished users found with the query: " + query);
+            throw new NotFoundException("Не найдено завершенных пользователей по запросу: " + query);
         }
         return result;
     }
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     public List<UserStatusResponse> searchSubmittedUser(String query) {
         List<UserStatusResponse> result = userRepository.searchSubmittedUser(query);
         if (result.isEmpty()) {
-            throw new NotFoundException("No submitted users found with the query: " + query);
+            throw new NotFoundException("Не найдено отправленных пользователей по запросу: " + query);
         }
         return result;
     }
@@ -121,15 +121,14 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-
     @Override
     public SimpleResponse deleteUserById(Long id) {
         User user = userRepository.getUserById(id)
-                .orElseThrow(() -> new NotFoundException("User by id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         userRepository.delete(user);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("User " + user.getUsername() + " successfully deleted")
+                .message("Пользователь " + user.getUsername() + " успешно удален")
                 .build();
     }
 
@@ -146,7 +145,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("User status successfully changed to submitted")
+                .message("Статус пользователя успешно изменен на сдавший")
                 .build();
     }
 
@@ -176,7 +175,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserWorldProfileResponse> findUserById(Long id) {
         return Optional.ofNullable(userRepository.findUserById(id)
-                .orElseThrow(() -> new NotFoundException("User with id: " + id + " not found")));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id: " + id + " не найден")));
     }
 
     private User getAuthentication() {

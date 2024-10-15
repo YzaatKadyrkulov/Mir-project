@@ -20,6 +20,7 @@ import kg.mir.Mirproject.config.security.jwt.JwtService;
 import kg.mir.Mirproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static java.lang.String.format;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -47,11 +47,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse signUp(SignUpRequest signUpRequest) {
-        log.info("Attempting to sign up user with email: {}", signUpRequest.email());
+        log.info("Попытка регистрации пользователя с email: {}", signUpRequest.email());
 
         if (userRepository.existsByEmail(signUpRequest.email())) {
-            log.warn("User with email: {} already exists", signUpRequest.email());
-            throw new AlreadyExistsException("User with email: " + signUpRequest.email() + " already exists");
+            log.warn("Пользователь с email: {} уже существует", signUpRequest.email());
+            throw new AlreadyExistsException("Пользователь с email: " + signUpRequest.email() + " уже существует");
         }
 
         String password = generateRandomPassword();
@@ -67,17 +67,15 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.USER)
                 .build();
         userRepository.save(newUser);
-        if (check()){
-            TotalSum totalSum = new TotalSum();
-            totalSum.setId(5L);
-            totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
-            totalSumRepo.save(totalSum);
-        }else {
-            TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
-            totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
-            totalSumRepo.save(totalSum);
-        }
-        log.info("User with email: {} successfully signed up", signUpRequest.email());
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseGet(() -> {
+            TotalSum newTotalSum = new TotalSum();
+            newTotalSum.setId(5L);
+            newTotalSum.setTotalSum(0);
+            return newTotalSum;
+        });
+        totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
+        totalSumRepo.save(totalSum);
+        log.info("Пользователь с email: {} успешно зарегистрирован", signUpRequest.email());
 
         Context context = new Context();
         context.setVariable("username", newUser.getUsername());
@@ -87,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             sendWelcomeEmail(context, newUser);
         } catch (Exception ex) {
-            log.error("Error sending confirmation email to address: {}", newUser.getEmail(), ex);
+            log.error("Ошибка при отправке письма подтверждения на адрес: {}", newUser.getEmail(), ex);
         }
 
         return AuthResponse.builder()
@@ -138,34 +136,34 @@ public class AuthServiceImpl implements AuthService {
         );
 
         helper.setText(message, true);
-        helper.setFrom("healthcheckjava@gmail.com");
+        helper.setFrom("miravtoproject@gmail.com");
         helper.setTo(newUser.getEmail());
         javaMailSender.send(mimeMessage);
-        log.info("Confirmation email sent to address: {}", newUser.getEmail());
+        log.info("Письмо с подтверждением отправлено на адрес: {}", newUser.getEmail());
     }
 
     @Override
     public AuthResponse signIn(SignInRequest signInRequest) {
-        log.info("Attempting to sign in user with email: {}", signInRequest.email());
+        log.info("Попытка входа пользователя с email: {}", signInRequest.email());
 
         User user = userRepository.getUserByEmail(signInRequest.email())
                 .orElseThrow(() -> {
-                    log.error("User with email: {} doesn't exist", signInRequest.email());
-                    return new NotFoundException("User with email: " + signInRequest.email() + " doesn't exist!");
+                    log.error("Пользователь с email: {} не существует", signInRequest.email());
+                    return new NotFoundException("Пользователь с email: " + signInRequest.email() + " не существует!");
                 });
 
         if (signInRequest.email().isBlank()) {
-            log.warn("Email is blank for sign-in attempt");
-            throw new BadCredentialException("Email is blank!");
+            log.warn("Email пуст при попытке входа");
+            throw new BadCredentialException("Email не может быть пустым!");
         }
 
         if (!passwordEncoder.matches(signInRequest.password(), user.getPassword())) {
-            log.warn("Incorrect password for user with email: {}", signInRequest.email());
-            throw new BadCredentialException("Wrong password!");
+            log.warn("Неверный пароль для пользователя с email: {}", signInRequest.email());
+            throw new BadCredentialException("Неверный пароль!");
         }
 
         String token = jwtService.generateToken(user);
-        log.info("User with email: {} successfully signed in", signInRequest.email());
+        log.info("Пользователь с email: {} успешно вошел", signInRequest.email());
 
         return AuthResponse.builder()
                 .token(token)
@@ -176,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
 
     @PostConstruct
     public void initSaveAdmin() {
-        log.info("Attempting to save admin user");
+        log.info("Попытка сохранить пользователя-администратора");
         User user = User.builder()
                 .userName("Admin")
                 .email("admin@gmail.com")
@@ -188,11 +186,12 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         if (!userRepository.existsByEmail(user.getEmail())) {
             userRepository.save(user);
-            log.info("Admin user with email: {} successfully saved", user.getEmail());
+            log.info("Пользователь-администратор с email: {} успешно сохранен", user.getEmail());
         } else {
-            log.info("Admin user with email: {} already exists", user.getEmail());
+            log.info("Пользователь-администратор с email: {} уже существует", user.getEmail());
         }
     }
+
     @Override
     public SimpleResponse forgotPassword(String email, String link) {
         log.info("Запрос на сброс пароля для email: {}", email);
@@ -235,15 +234,22 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword(passwordEncoder.encode(request.newPassword()));
             user.setVerificationCode(null);
             userRepository.save(user);
-            log.info("Сброс пароля успешно выполнен для токена: {}", request.token());
-            return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно обновлено!").build();
-        } catch (NotFoundException e) {
-            log.error("Ошибка сброса пароля для токена: {}", request.token(), e);
-            return SimpleResponse.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).message("Произошла ошибка.").build();
+            log.info("Пароль пользователя с токеном: {} успешно сброшен", request.token());
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .message("Пароль успешно сброшен.")
+                    .build();
+        } catch (Exception ex) {
+            log.error("Ошибка при сбросе пароля для токена: {}", request.token(), ex);
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message("Произошла ошибка при сбросе пароля.")
+                    .build();
         }
     }
-    private  String generateRandomPassword() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+
+    private String generateRandomPassword() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < 7; i++) {
             int index = (int) (Math.random() * chars.length());
@@ -251,13 +257,4 @@ public class AuthServiceImpl implements AuthService {
         }
         return password.toString();
     }
-    private boolean check(){
-        for (TotalSum t : totalSumRepo.getAllTotalSum()){
-            if (t.getId().equals(5L)){
-                return false;
-            }
-        }
-        return true;
-    }
-
 }
