@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
 import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
@@ -27,7 +28,7 @@ public class AuthApi {
     }
 
     @PostMapping("/signIn")
-    public SimpleResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
+    public AuthResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
     @PostMapping("/forgot-password")

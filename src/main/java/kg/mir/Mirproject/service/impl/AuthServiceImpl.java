@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
 import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
@@ -96,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        helper.setSubject("Ассалому алейкум! Добро пожаловать в Мир");
+        helper.setSubject("Добро пожаловать в Мир");
 
         String message = String.format(
                 "<!doctype html>" +
@@ -119,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
                         "<div class=\"container\">" +
                         "<h1>Ассалому алейкум!</h1>" +
                         "<p>Уважаемый (-ая) <strong>%s</strong>,</p>" +
-                        "<p>Спасибо за регистрацию! Ваш аккаунт был успешно создан.</p>" +
+                        "<p>Вы успешно зарегистрировались на нашем сайте, ваш аккаунт успешно создан</p>" +
                         "<p>Ваш email: <strong style=\"font-weight: bold; font-size: 18px;\">%s</strong></p>" +
                         "<p>Ваш пароль: <strong style=\"font-weight: bold; font-size: 18px;\">%s</strong></p>" +
                         "<p>Мы рады приветствовать вас в нашем сообществе и ждем вас на нашем сайте.</p>" +
@@ -140,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SimpleResponse signIn(SignInRequest signInRequest) {
+    public AuthResponse signIn(SignInRequest signInRequest) {
         log.info("Попытка входа пользователя с email: {}", signInRequest.email());
 
         User user = userRepository.getUserByEmail(signInRequest.email())
@@ -162,10 +163,12 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(user);
         log.info("Пользователь с email: {} успешно вошел", signInRequest.email());
 
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Вы успешно прошли аутентификацию")
+        return AuthResponse.builder()
+                .token(token)
+                .email(user.getEmail())
+                .role(user.getRole())
                 .build();
+
     }
 
     @PostConstruct
