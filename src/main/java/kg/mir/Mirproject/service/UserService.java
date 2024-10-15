@@ -33,6 +33,7 @@ public interface UserService {
     List<AllReceivedResponse> getAllReceivedUsers();
 
     ReceivedResponse getReceivedUserById(Long id);
+
     AdminResponse getAdminProfileById();
 
     void clearUsersByStatus(UserStatus userStatus);
