@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -46,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
     private final TotalSumRepo totalSumRepo;
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom random = new SecureRandom();
 
     @Override
     public SimpleResponse signUp(SignUpRequest signUpRequest) {
@@ -55,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
             log.warn("Пользователь с email: {} уже существует", signUpRequest.email());
             throw new AlreadyExistsException("Пользователь с email: " + signUpRequest.email() + " уже существует");
         }
-        String password = generateRandomPassword();
+        String password = generateSecurePassword();
         User newUser = User.builder()
                 .userName(signUpRequest.userName())
                 .totalSum(signUpRequest.totalSum())
@@ -247,12 +250,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private String generateRandomPassword() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder password = new StringBuilder();
-        for (int i = 0; i < 7; i++) {
-            int index = (int) (Math.random() * chars.length());
-            password.append(chars.charAt(index));
+    public String generateSecurePassword() {
+        StringBuilder password = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
         }
         return password.toString();
     }
