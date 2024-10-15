@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
         User user = getAuthentication();
         user.setUserName(profileUpdateRequest.name());
-        user.setPhotoUrl(user.getPhotoUrl());
+        user.setPhotoUrl(profileUpdateRequest.photoUrl());
         user.setPhoneNumber(profileUpdateRequest.phoneNumber());
         user.setGoal(profileUpdateRequest.goal());
         userRepository.save(user);
