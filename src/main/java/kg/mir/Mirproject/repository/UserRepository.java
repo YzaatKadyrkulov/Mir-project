@@ -28,13 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new kg.mir.Mirproject.dto.submittedDto.SubmittedResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'SUBMITTED'")
     List<SubmittedResponse> getAllSubmittedUsers();
 
-    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u where u.userStatus = 'RECEIVED'")
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'RECEIVED' AND u.userName LIKE %:query%")
     List<UserStatusResponse> searchReceivedUser(@Param("query") String query);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u where u.userStatus = 'FINISHED'")
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'FINISHED' AND u.userName LIKE %:query%")
     List<UserStatusResponse> searchFinishedUser(@Param("query") String query);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u where u.userStatus = 'SUBMITTED'")
+    @Query("SELECT new kg.mir.Mirproject.dto.userDto.UserStatusResponse(u.id,u.photoUrl, u.userName) FROM User u WHERE u.userStatus = 'SUBMITTED' AND u.userName LIKE %:query%")
     List<UserStatusResponse> searchSubmittedUser(@Param("query") String query);
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.id,u.photoUrl,u.userName, u.email, u.phoneNumber, u.totalSum) " +
