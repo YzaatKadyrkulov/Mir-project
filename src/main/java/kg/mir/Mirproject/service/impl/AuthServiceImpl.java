@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import kg.mir.Mirproject.dto.SimpleResponse;
-import kg.mir.Mirproject.dto.authDto.AuthResponse;
 import kg.mir.Mirproject.dto.authDto.SignInRequest;
 import kg.mir.Mirproject.dto.authDto.SignUpRequest;
 import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
@@ -48,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     private final TotalSumRepo totalSumRepo;
 
     @Override
-    public AuthResponse signUp(SignUpRequest signUpRequest) {
+    public SimpleResponse signUp(SignUpRequest signUpRequest) {
         log.info("Попытка регистрации пользователя с email: {}", signUpRequest.email());
 
         if (userRepository.existsByEmail(signUpRequest.email())) {
@@ -87,10 +86,9 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception ex) {
             log.error("Ошибка при отправке письма подтверждения на адрес: {}", newUser.getEmail(), ex);
         }
-        return AuthResponse.builder()
-                .token(jwtService.generateToken(newUser))
-                .email(newUser.getEmail())
-                .role(newUser.getRole())
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Аккаунт успешно создан. Мы отправили пароль на этот "+newUser.getEmail()+" электронный адрес")
                 .build();
     }
 
@@ -121,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public AuthResponse signIn(SignInRequest signInRequest) {
+    public SimpleResponse signIn(SignInRequest signInRequest) {
         log.info("Попытка входа пользователя с email: {}", signInRequest.email());
 
         User user = userRepository.getUserByEmail(signInRequest.email())
@@ -143,10 +141,9 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(user);
         log.info("Пользователь с email: {} успешно вошел", signInRequest.email());
 
-        return AuthResponse.builder()
-                .token(token)
-                .email(user.getEmail())
-                .role(user.getRole())
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Вы успешно прошли аутентификацию")
                 .build();
     }
 
