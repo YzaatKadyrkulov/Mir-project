@@ -31,11 +31,11 @@ import org.springframework.stereotype.Service;
 
 import org.thymeleaf.context.Context;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static java.lang.String.format;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -88,35 +88,56 @@ public class AuthServiceImpl implements AuthService {
         }
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Аккаунт успешно создан. Мы отправили пароль на этот "+newUser.getEmail()+" электронный адрес")
+                .message("Аккаунт успешно создан. Мы отправили пароль на этот " + newUser.getEmail() + " электронный адрес")
                 .build();
     }
 
-    private void sendWelcomeEmail(Context context, User newUser) {
-        MimeMessage mimeMessage;
-        try {
-            mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            helper.setSubject("Добро пожаловать в Мир!");
-            Resource resource = new ClassPathResource("templates/welcome_email.html");
-            String htmlContent = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            String message = htmlContent
-                    .replace("${username}", context.getVariable("username").toString())
-                    .replace("${email}", context.getVariable("email").toString())
-                    .replace("${password}", context.getVariable("password").toString());
+    private void sendWelcomeEmail(Context context, User newUser) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            helper.setText(message, true);
-            helper.setFrom("miravtoproject@gmail.com");
-            helper.setTo(newUser.getEmail());
-            javaMailSender.send(mimeMessage);
-            log.info("Письмо с подтверждением отправлено на адрес: {}", newUser.getEmail());
-        } catch (IOException e) {
-            log.error("Ошибка при загрузке HTML-шаблона: {}", e.getMessage());
-        } catch (MessagingException e) {
-            log.error("Ошибка при отправке письма: {}", e.getMessage());
-        }
+        helper.setSubject("Ассалому алейкум! Добро пожаловать в Мир");
+
+        String message = String.format(
+                "<!doctype html>" +
+                        "<html lang=\"ru\">" +
+                        "<head>" +
+                        "<meta charset=\"UTF-8\">" +
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                        "<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">" +
+                        "<style>" +
+                        "body { font-family: Arial, sans-serif; background-color: #e9ecef; color: #495057; line-height: 1.6; margin: 0; padding: 0; }" +
+                        ".container { max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); }" +
+                        "h1 { color: #343a40; font-size: 24px; }" +
+                        "p { margin-bottom: 20px; font-size: 16px; }" +
+                        ".button { display: inline-block; background: linear-gradient(90deg, #4CAF50, #45a049); color: white; padding: 12px 25px; text-align: center; text-decoration: none; font-size: 18px; margin-top: 20px; border-radius: 5px; transition: background 0.3s ease; }" +
+                        ".button:hover { background: linear-gradient(90deg, #45a049, #4CAF50); }" +
+                        "</style>" +
+                        "<title>Добро пожаловать в Мир</title>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div class=\"container\">" +
+                        "<h1>Ассалому алейкум!</h1>" +
+                        "<p>Уважаемый (-ая) <strong>%s</strong>,</p>" +
+                        "<p>Спасибо за регистрацию! Ваш аккаунт был успешно создан.</p>" +
+                        "<p>Ваш email: <strong style=\"font-weight: bold; font-size: 18px;\">%s</strong></p>" +
+                        "<p>Ваш пароль: <strong style=\"font-weight: bold; font-size: 18px;\">%s</strong></p>" +
+                        "<p>Мы рады приветствовать вас в нашем сообществе и ждем вас на нашем сайте.</p>" +
+                        "<a href=\"https://yourwebsite.com\" class=\"button\">Посетить наш сайт</a>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>",
+                context.getVariable("username"),
+                context.getVariable("email"),
+                context.getVariable("password")
+        );
+
+        helper.setText(message, true);
+        helper.setFrom("miravtoproject@gmail.com");
+        helper.setTo(newUser.getEmail());
+        javaMailSender.send(mimeMessage);
+        log.info("Confirmation email sent to address: {}", newUser.getEmail());
     }
-
 
     @Override
     public SimpleResponse signIn(SignInRequest signInRequest) {

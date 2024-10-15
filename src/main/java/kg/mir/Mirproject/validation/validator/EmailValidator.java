@@ -4,6 +4,7 @@ package kg.mir.Mirproject.validation.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import kg.mir.Mirproject.validation.EmailValidation;
+import org.springframework.http.HttpStatus;
 
 public class EmailValidator implements ConstraintValidator<EmailValidation, String> {
 
@@ -12,3 +13,5 @@ public class EmailValidator implements ConstraintValidator<EmailValidation, Stri
         return s != null && s.endsWith("@gmail.com");
     }
 }
+
+
