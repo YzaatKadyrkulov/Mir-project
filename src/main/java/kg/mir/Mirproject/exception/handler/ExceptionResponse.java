@@ -1,4 +1,4 @@
-package kg.mir.Mirproject.exception;
+package kg.mir.Mirproject.exception.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

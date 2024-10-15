@@ -59,16 +59,17 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(paymentRequest.status());
         payment.setUser(user);
         payment.setDate(LocalDate.now());
+        paymentRepo.save(payment);
         user.getPayments().add(payment);
         user.setPaidDebt(user.getPaidDebt() + paymentRequest.sum());
+        userRepository.save(user);
         if (user.getPrincipalDebt() <= user.getPaidDebt()) {
             user.setUserStatus(UserStatus.FINISHED);
+            userRepository.save(user);
         }
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Общая сумма не найдена"));
         totalSum.setTotalSum(totalSum.getTotalSum() + paymentRequest.sum());
         totalSumRepo.save(totalSum);
-        userRepository.save(user);
-        paymentRepo.save(payment);
         return SimpleResponse.builder().message("Успешно добавлено").httpStatus(HttpStatus.OK).build();
     }
 
@@ -129,7 +130,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (totalSum.getTotalSum() < debtRequest.debtSum()) {
             throw new BadRequestException("Сумма MIR слишком мала");
         }
-        user.setPrincipalDebt(debtRequest.debtSum());
+        user.setPrincipalDebt(user.getPrincipalDebt()+debtRequest.debtSum());
         user.setUserStatus(UserStatus.RECEIVED);
         userRepository.save(user);
         int debt = debtRequest.debtSum();
