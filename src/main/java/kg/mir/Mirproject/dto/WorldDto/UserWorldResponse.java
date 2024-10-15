@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserWorldResponse {
     private Long id;
+    private String photoUrl;
     private String userName;
     private String email;
     private String phoneNumber;

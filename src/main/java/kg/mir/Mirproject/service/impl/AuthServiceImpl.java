@@ -20,7 +20,6 @@ import kg.mir.Mirproject.config.security.jwt.JwtService;
 import kg.mir.Mirproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
