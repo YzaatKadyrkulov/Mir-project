@@ -11,6 +11,7 @@ import kg.mir.Mirproject.dto.userDto.ResetPasswordRequest;
 import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.Role;
+import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.AlreadyExistsException;
 import kg.mir.Mirproject.exception.BadCredentialException;
 import kg.mir.Mirproject.exception.NotFoundException;
@@ -30,6 +31,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.thymeleaf.context.Context;
+
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -52,7 +55,6 @@ public class AuthServiceImpl implements AuthService {
             log.warn("Пользователь с email: {} уже существует", signUpRequest.email());
             throw new AlreadyExistsException("Пользователь с email: " + signUpRequest.email() + " уже существует");
         }
-
         String password = generateRandomPassword();
         User newUser = User.builder()
                 .userName(signUpRequest.userName())
@@ -63,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(signUpRequest.email())
                 .password(passwordEncoder.encode(password))
                 .phoneNumber(signUpRequest.phoneNumber())
+                .userStatus(UserStatus.MIR)
                 .role(Role.USER)
                 .build();
         userRepository.save(newUser);
@@ -75,18 +78,15 @@ public class AuthServiceImpl implements AuthService {
         totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
         totalSumRepo.save(totalSum);
         log.info("Пользователь с email: {} успешно зарегистрирован", signUpRequest.email());
-
         Context context = new Context();
         context.setVariable("username", newUser.getUsername());
         context.setVariable("email", newUser.getEmail());
         context.setVariable("password", password);
-
         try {
             sendWelcomeEmail(context, newUser);
         } catch (Exception ex) {
             log.error("Ошибка при отправке письма подтверждения на адрес: {}", newUser.getEmail(), ex);
         }
-
         return AuthResponse.builder()
                 .token(jwtService.generateToken(newUser))
                 .email(newUser.getEmail())
@@ -94,52 +94,31 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    private void sendWelcomeEmail(Context context, User newUser) throws MessagingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+    private void sendWelcomeEmail(Context context, User newUser) {
+        MimeMessage mimeMessage;
+        try {
+            mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setSubject("Добро пожаловать в Мир!");
+            Resource resource = new ClassPathResource("templates/welcome_email.html");
+            String htmlContent = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            String message = htmlContent
+                    .replace("${username}", context.getVariable("username").toString())
+                    .replace("${email}", context.getVariable("email").toString())
+                    .replace("${password}", context.getVariable("password").toString());
 
-        helper.setSubject("Ассалому алейкум! Добро пожаловать в Мир");
-
-        String message = String.format(
-                "<!doctype html>" +
-                        "<html lang=\"ru\">" +
-                        "<head>" +
-                        "<meta charset=\"UTF-8\">" +
-                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                        "<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">" +
-                        "<style>" +
-                        "body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; line-height: 1.6; }" +
-                        ".container { width: 80%%; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }" +
-                        "h1 { color: #555; }" +
-                        ".button { display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; font-size: 16px; margin-top: 20px; border-radius: 5px; }" +
-                        ".button:hover { background-color: #45a049; }" +
-                        "p { margin-bottom: 20px; }" +
-                        "</style>" +
-                        "<title>Добро пожаловать в Мир</title>" +
-                        "</head>" +
-                        "<body>" +
-                        "<div class=\"container\">" +
-                        "<h1>Ассалому алейкум!</h1>" +
-                        "<p>Уважаемый (-ая) <strong>%s</strong>,</p>" +
-                        "<p>Спасибо за регистрацию! Ваш аккаунт был успешно создан.</p>" +
-                        "<p>Ваш email: <strong>%s</strong></p>" +
-                        "<p>Ваш пароль: <strong>%s</strong></p>" +
-                        "<p>Мы рады приветствовать вас в нашем сообществе и ждем вас на нашем сайте.</p>" +
-                        "<a href=\"https://yourwebsite.com\" class=\"button\">Посетить наш сайт</a>" +
-                        "</div>" +
-                        "</body>" +
-                        "</html>",
-                context.getVariable("username"),
-                context.getVariable("email"),
-                context.getVariable("password")
-        );
-
-        helper.setText(message, true);
-        helper.setFrom("miravtoproject@gmail.com");
-        helper.setTo(newUser.getEmail());
-        javaMailSender.send(mimeMessage);
-        log.info("Письмо с подтверждением отправлено на адрес: {}", newUser.getEmail());
+            helper.setText(message, true);
+            helper.setFrom("miravtoproject@gmail.com");
+            helper.setTo(newUser.getEmail());
+            javaMailSender.send(mimeMessage);
+            log.info("Письмо с подтверждением отправлено на адрес: {}", newUser.getEmail());
+        } catch (IOException e) {
+            log.error("Ошибка при загрузке HTML-шаблона: {}", e.getMessage());
+        } catch (MessagingException e) {
+            log.error("Ошибка при отправке письма: {}", e.getMessage());
+        }
     }
+
 
     @Override
     public AuthResponse signIn(SignInRequest signInRequest) {
@@ -202,7 +181,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            helper.setFrom("healthcheckjava@gmail.com");
+            helper.setFrom("miravtoproject@gmail.com");
             helper.setSubject("Сброс пароля");
             helper.setTo(email);
             Resource resource = new ClassPathResource("templates/forgot_password.html");

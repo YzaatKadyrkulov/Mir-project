@@ -1,39 +1,15 @@
 databaseChangeLog:
   - changeSet:
-      id: init-test-data-total_sums-table
-      author: Bektur777
+      id: init-test-data-users-payments
+      author: Nurik
       changes:
-        - insert:
-            tableName: total_sums
-            columns:
-              - column:
-                  name: id
-                  value: 1
-              - column:
-                  name: total_sum
-                  value: 100
-
-        - insert:
-            tableName: total_sums
-            columns:
-              - column:
-                  name: id
-                  value: 2
-              - column:
-                  name: total_sum
-                  value: 150
-
-
-  - changeSet:
-      id: init-test-data-users-table
-      author: Bektur777
-      changes:
+        # Примеры пользователей
         - insert:
             tableName: users
             columns:
               - column:
                   name: id
-                  value: 2
+                  value: 1
               - column:
                   name: email
                   value: "user1@gmail.com"
@@ -57,16 +33,56 @@ databaseChangeLog:
                   value: 1000
               - column:
                   name: principal_debt
-                  value: 500
+                  value: 0
               - column:
                   name: total_sum
                   value: 1500
               - column:
                   name: paid_debt
                   value: 0
-#              - column:
-#                  name: user_status
-#                  value: "FINISHED"
+              - column:
+                  name: user_status
+                  value: "MIR"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: email
+                  value: "user2@gmail.com"
+              - column:
+                  name: password
+                  value: "password2"
+              - column:
+                  name: phone_number
+                  value: "+996703778026"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user2.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Two"
+              - column:
+                  name: goal
+                  value: 1200
+              - column:
+                  name: principal_debt
+                  value: 600
+              - column:
+                  name: total_sum
+                  value: 1600
+              - column:
+                  name: paid_debt
+                  value: 100
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
 
         - insert:
             tableName: users
@@ -76,25 +92,305 @@ databaseChangeLog:
                   value: 3
               - column:
                   name: email
-                  value: "syma@gmail.com"
+                  value: "user3@gmail.com"
               - column:
                   name: password
-                  value: "adminpass"
+                  value: "password3"
               - column:
                   name: phone_number
-                  value: "+996987654321"  # Изменено на +996987654321
+                  value: "+996703778027"
               - column:
                   name: photo_url
-                  value: "http://example.com/photos/admin.jpg"
+                  value: "http://example.com/photos/user3.jpg"
               - column:
                   name: role
                   value: "USER"
               - column:
                   name: user_name
-                  value: "Syimyk Beishekeev"
+                  value: "User Three"
               - column:
                   name: goal
+                  value: 1400
+              - column:
+                  name: principal_debt
+                  value: 700
+              - column:
+                  name: total_sum
+                  value: 1700
+              - column:
+                  name: paid_debt
+                  value: 200
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: email
+                  value: "user4@gmail.com"
+              - column:
+                  name: password
+                  value: "password4"
+              - column:
+                  name: phone_number
+                  value: "+996703778028"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user4.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Four"
+              - column:
+                  name: goal
+                  value: 900
+              - column:
+                  name: principal_debt
+                  value: 300
+              - column:
+                  name: total_sum
+                  value: 1200
+              - column:
+                  name: paid_debt
+                  value: 150
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 5
+              - column:
+                  name: email
+                  value: "user5@gmail.com"
+              - column:
+                  name: password
+                  value: "password5"
+              - column:
+                  name: phone_number
+                  value: "+996703778029"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user5.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Five"
+              - column:
+                  name: goal
+                  value: 1100
+              - column:
+                  name: principal_debt
+                  value: 500
+              - column:
+                  name: total_sum
+                  value: 1300
+              - column:
+                  name: paid_debt
+                  value: 100
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 6
+              - column:
+                  name: email
+                  value: "user6@gmail.com"
+              - column:
+                  name: password
+                  value: "password6"
+              - column:
+                  name: phone_number
+                  value: "+996703778030"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user6.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Six"
+              - column:
+                  name: goal
+                  value: 1300
+              - column:
+                  name: principal_debt
+                  value: 0
+              - column:
+                  name: total_sum
+                  value: 1500
+              - column:
+                  name: paid_debt
+                  value: 300
+              - column:
+                  name: user_status
+                  value: "MIR"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 7
+              - column:
+                  name: email
+                  value: "user7@gmail.com"
+              - column:
+                  name: password
+                  value: "password7"
+              - column:
+                  name: phone_number
+                  value: "+996703778031"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user7.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Seven"
+              - column:
+                  name: goal
+                  value: 1200
+              - column:
+                  name: principal_debt
+                  value: 800
+              - column:
+                  name: total_sum
                   value: 2000
+              - column:
+                  name: paid_debt
+                  value: 100
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 8
+              - column:
+                  name: email
+                  value: "user8@gmail.com"
+              - column:
+                  name: password
+                  value: "password8"
+              - column:
+                  name: phone_number
+                  value: "+996703778032"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user8.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Eight"
+              - column:
+                  name: goal
+                  value: 1500
+              - column:
+                  name: principal_debt
+                  value: 200
+              - column:
+                  name: total_sum
+                  value: 1800
+              - column:
+                  name: paid_debt
+                  value: 300
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 9
+              - column:
+                  name: email
+                  value: "user9@gmail.com"
+              - column:
+                  name: password
+                  value: "password9"
+              - column:
+                  name: phone_number
+                  value: "+996703778033"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user9.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Nine"
+              - column:
+                  name: goal
+                  value: 1600
+              - column:
+                  name: principal_debt
+                  value: 900
+              - column:
+                  name: total_sum
+                  value: 2500
+              - column:
+                  name: paid_debt
+                  value: 100
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 10
+              - column:
+                  name: email
+                  value: "user10@gmail.com"
+              - column:
+                  name: password
+                  value: "password10"
+              - column:
+                  name: phone_number
+                  value: "+996703778034"
+              - column:
+                  name: photo_url
+                  value: "http://example.com/photos/user10.jpg"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: user_name
+                  value: "User Ten"
+              - column:
+                  name: goal
+                  value: 1900
               - column:
                   name: principal_debt
                   value: 1000
@@ -103,15 +399,12 @@ databaseChangeLog:
                   value: 3000
               - column:
                   name: paid_debt
-                  value: 0
-#              - column:
-#                  name: user_status
-#                  value: "SUBMITTED"
+                  value: 200
+              - column:
+                  name: user_status
+                  value: "RECEIVED"
 
-  - changeSet:
-      id: init-test-data-payments-table
-      author: Bektur777
-      changes:
+        # Примеры платежей
         - insert:
             tableName: payments
             columns:
@@ -126,7 +419,7 @@ databaseChangeLog:
                   value: 500
               - column:
                   name: user_id
-                  value: 2
+                  value: 1
               - column:
                   name: status
                   value: "PAID"
@@ -165,6 +458,139 @@ databaseChangeLog:
               - column:
                   name: user_id
                   value: 3
+              - column:
+                  name: status
+                  value: "PAID"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: date
+                  value: "2023-09-25"
+              - column:
+                  name: sum
+                  value: 300
+              - column:
+                  name: user_id
+                  value: 4
+              - column:
+                  name: status
+                  value: "WAITING"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 5
+              - column:
+                  name: date
+                  value: "2023-09-30"
+              - column:
+                  name: sum
+                  value: 400
+              - column:
+                  name: user_id
+                  value: 5
+              - column:
+                  name: status
+                  value: "PAID"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 6
+              - column:
+                  name: date
+                  value: "2023-10-05"
+              - column:
+                  name: sum
+                  value: 500
+              - column:
+                  name: user_id
+                  value: 6
+              - column:
+                  name: status
+                  value: "PAID"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 7
+              - column:
+                  name: date
+                  value: "2023-10-10"
+              - column:
+                  name: sum
+                  value: 600
+              - column:
+                  name: user_id
+                  value: 7
+              - column:
+                  name: status
+                  value: "WAITING"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 8
+              - column:
+                  name: date
+                  value: "2023-10-15"
+              - column:
+                  name: sum
+                  value: 700
+              - column:
+                  name: user_id
+                  value: 8
+              - column:
+                  name: status
+                  value: "PAID"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 9
+              - column:
+                  name: date
+                  value: "2023-10-20"
+              - column:
+                  name: sum
+                  value: 800
+              - column:
+                  name: user_id
+                  value: 9
+              - column:
+                  name: status
+                  value: "WAITING"
+
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  value: 10
+              - column:
+                  name: date
+                  value: "2023-10-25"
+              - column:
+                  name: sum
+                  value: 900
+              - column:
+                  name: user_id
+                  value: 10
               - column:
                   name: status
                   value: "PAID"
