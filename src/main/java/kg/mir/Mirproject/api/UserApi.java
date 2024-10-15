@@ -11,7 +11,6 @@ import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
 import kg.mir.Mirproject.enums.UserStatus;
-import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -88,21 +87,6 @@ public class UserApi {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @Operation(
-            summary = "Искать пользователя по имени и фамилии",
-            description = "Ищет получившего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
-    )
-    @GetMapping("/search")
-    public ResponseEntity<?> searchUsers(@RequestParam("query") String query) {
-        try {
-            List<List<UserStatusResponse>> users = userService.searchUsers(query);
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    @Operation(
             summary = "Получить всех закончивих пользователей",
             description = "Получает всех закончивших пользователей. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
     )
@@ -124,7 +108,7 @@ public class UserApi {
         return ResponseEntity.ok(users);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Получить пользователя ",
             description = "Получает пользователей из мира. Доступны только пользователю с ролью 'ADMIN'."
@@ -176,5 +160,38 @@ public class UserApi {
     public ResponseEntity<String> clearUserByStatus(@RequestParam UserStatus status) {
         userService.clearUsersByStatus(status);
         return ResponseEntity.ok("Users with status: " + status + " were removed");
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Искать пользователя по имени и фамилии",
+            description = "Ищет получившего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/search/receivedUser")
+    public ResponseEntity<List<UserStatusResponse>> searchReceivedUser(@RequestParam("query") String query) {
+            List<UserStatusResponse> users = userService.searchReceivedUser(query);
+            return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Искать пользователя по имени и фамилии",
+            description = "Ищет закончившего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/search/finishedUser")
+    public ResponseEntity<List<UserStatusResponse>> searchFinishedUser(@RequestParam("query") String query) {
+        List<UserStatusResponse> users = userService.searchFinishedUser(query);
+        return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @Operation(
+            summary = "Искать пользователя по имени и фамилии",
+            description = "Ищет сдавшего пользователя по имени и фамилии. Доступны только пользователям с ролью 'USER' и 'ADMIN'."
+    )
+    @GetMapping("/search/submittedUser")
+    public ResponseEntity<List<UserStatusResponse>> searchSubmittedUser(@RequestParam("query") String query) {
+        List<UserStatusResponse> users = userService.searchSubmittedUser(query);
+        return ResponseEntity.ok(users);
     }
 }

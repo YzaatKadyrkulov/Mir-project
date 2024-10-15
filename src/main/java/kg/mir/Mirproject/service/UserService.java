@@ -24,8 +24,6 @@ public interface UserService {
 
     List<GraduatedResponseOne> getAllGraduatedUsers();
 
-    List<List<UserStatusResponse>> searchUsers(String query);
-
     List<UserWorldResponse> getUsersByTotalSumRange(int minAmount, int maxAmount);
 
     Optional<UserWorldProfileResponse> findUserById(Long id);
@@ -37,4 +35,10 @@ public interface UserService {
     AdminResponse getAdminProfileById();
 
     void clearUsersByStatus(UserStatus userStatus);
+
+    List<UserStatusResponse> searchReceivedUser(String query);
+
+    List<UserStatusResponse> searchFinishedUser(String query);
+
+    List<UserStatusResponse> searchSubmittedUser(String query);
 }

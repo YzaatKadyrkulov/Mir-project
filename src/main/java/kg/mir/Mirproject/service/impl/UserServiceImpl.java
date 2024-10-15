@@ -5,14 +5,12 @@ import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
-import kg.mir.Mirproject.dto.WorldUserResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
 import kg.mir.Mirproject.dto.userDto.*;
 import kg.mir.Mirproject.entities.TotalSum;
 import kg.mir.Mirproject.entities.User;
 import kg.mir.Mirproject.enums.UserStatus;
 import kg.mir.Mirproject.exception.NotFoundException;
-import kg.mir.Mirproject.mapper.UserMapper;
 import kg.mir.Mirproject.repository.TotalSumRepo;
 import kg.mir.Mirproject.repository.UserRepository;
 import kg.mir.Mirproject.service.UserService;
@@ -53,9 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AdminResponse getAdminProfileById() {
-        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(()-> new NotFoundException("Total sum not found"));
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Total sum not found"));
         List<UserWorldResponse> users = userRepository.getAllWorldUsers();
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(Collections.emptyList()).build();
         }
         return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(userRepository.getAllWorldUsers()).build();
@@ -65,6 +63,33 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void clearUsersByStatus(UserStatus userStatus) {
         userRepository.deleteAllByUserStatus(userStatus);
+    }
+
+    @Override
+    public List<UserStatusResponse> searchReceivedUser(String query) {
+        List<UserStatusResponse> result = userRepository.searchReceivedUser(query);
+        if (result.isEmpty()) {
+            throw new NotFoundException("No received users found with the query: " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public List<UserStatusResponse> searchFinishedUser(String query) {
+        List<UserStatusResponse> result = userRepository.searchFinishedUser(query);
+        if (result.isEmpty()) {
+            throw new NotFoundException("No finished users found with the query: " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public List<UserStatusResponse> searchSubmittedUser(String query) {
+        List<UserStatusResponse> result = userRepository.searchSubmittedUser(query);
+        if (result.isEmpty()) {
+            throw new NotFoundException("No submitted users found with the query: " + query);
+        }
+        return result;
     }
 
     @Override
@@ -129,8 +154,8 @@ public class UserServiceImpl implements UserService {
     public List<GraduatedResponseOne> getAllGraduatedUsers() {
         List<GraduatedResponseOne> users = new ArrayList<>();
         List<User> all = userRepository.findAll();
-        for(User user : all){
-            if (user.getUserStatus() != null && user.getUserStatus().equals(UserStatus.FINISHED)){
+        for (User user : all) {
+            if (user.getUserStatus() != null && user.getUserStatus().equals(UserStatus.FINISHED)) {
                 GraduatedResponseOne finishedUser = GraduatedResponseOne.builder()
                         .id(user.getId())
                         .userName(user.getUsername())
@@ -141,29 +166,6 @@ public class UserServiceImpl implements UserService {
             }
         }
         return users;
-    }
-
-    @Override
-    public List<List<UserStatusResponse>> searchUsers(String query) throws NotFoundException {
-        List<UserStatusResponse> allUsers = userRepository.findByUserName(query);
-
-        if (allUsers.isEmpty()) {
-            throw new NotFoundException("Users not found");
-        }
-
-        List<UserStatusResponse> receivedUsers = allUsers.stream()
-                .filter(user -> user.userStatus() == UserStatus.RECEIVED)
-                .toList();
-
-        List<UserStatusResponse> finishedUsers = allUsers.stream()
-                .filter(user -> user.userStatus() == UserStatus.FINISHED)
-                .toList();
-
-        List<UserStatusResponse> submittedUsers = allUsers.stream()
-                .filter(user -> user.userStatus() == UserStatus.SUBMITTED)
-                .toList();
-
-        return List.of(receivedUsers, finishedUsers, submittedUsers);
     }
 
     @Override
