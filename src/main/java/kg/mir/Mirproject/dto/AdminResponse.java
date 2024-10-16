@@ -1,8 +1,6 @@
 package kg.mir.Mirproject.dto;
 
-import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import lombok.*;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 @Data
@@ -11,5 +9,5 @@ import java.util.List;
 @Builder
 public class AdminResponse {
     private int globalSum;
-    private List<UserWorldResponse> users;
+    private List<MirUsersResponse> users;
 }

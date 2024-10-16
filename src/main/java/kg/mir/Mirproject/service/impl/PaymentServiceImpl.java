@@ -2,7 +2,7 @@ package kg.mir.Mirproject.service.impl;
 
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.DebtRequest;
-import kg.mir.Mirproject.dto.WorldUserResponse;
+import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.entities.Payment;
@@ -111,10 +111,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public WorldUserResponse getUserWorldById(Long id) {
+    public MirUsersResponse getUserWorldById(Long id) {
         User user = userRepository.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с ID " + id + " не найден"));
-        return WorldUserResponse.builder()
+        return MirUsersResponse.builder()
                 .id(user.getId())
                 .photoUrl(user.getPhotoUrl())
                 .userName(user.getUsername())

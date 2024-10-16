@@ -5,8 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.DebtRequest;
-import kg.mir.Mirproject.dto.WorldDto.DebtResponse;
-import kg.mir.Mirproject.dto.WorldUserResponse;
+import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
 import kg.mir.Mirproject.service.PaymentService;
@@ -64,8 +63,8 @@ public class PaymentApi {
             description = "Возвращает информацию о мире пользователя по ID. Доступно только пользователю с ролью 'ADMIN'."
     )
     @GetMapping("/userWorld/{userId}")
-    public ResponseEntity<WorldUserResponse> getUserWorldById(@PathVariable Long userId) {
-        WorldUserResponse response = paymentService.getUserWorldById(userId);
+    public ResponseEntity<MirUsersResponse> getUserWorldById(@PathVariable Long userId) {
+        MirUsersResponse response = paymentService.getUserWorldById(userId);
         return ResponseEntity.ok(response);
     }
 

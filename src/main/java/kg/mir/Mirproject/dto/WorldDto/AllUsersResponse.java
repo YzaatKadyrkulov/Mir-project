@@ -1,12 +1,13 @@
-package kg.mir.Mirproject.dto;
+package kg.mir.Mirproject.dto.WorldDto;
 
 import lombok.Builder;
 @Builder
-public record WorldUserResponse(
+public record AllUsersResponse(
         Long id,
         String photoUrl,
         String userName,
-        int userGoal,
+        String email,
+        String number,
         int userTotalSum
 ) {
 }

@@ -2,6 +2,7 @@ package kg.mir.Mirproject.service.impl;
 
 import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.AdminResponse;
+import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AdminResponse getAdminProfileById() {
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Общая сумма не найдена"));
-        List<UserWorldResponse> users = userRepository.getAllWorldUsers();
+        List<MirUsersResponse> users = userRepository.getAllWorldUsers();
         if (users.isEmpty()) {
             return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(Collections.emptyList()).build();
         }
