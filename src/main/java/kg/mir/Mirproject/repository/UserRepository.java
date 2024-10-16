@@ -1,6 +1,7 @@
 package kg.mir.Mirproject.repository;
 
 import kg.mir.Mirproject.dto.MirUsersResponse;
+import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
@@ -44,9 +45,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ORDER BY u.totalSum ASC")
     List<UserWorldResponse> findByTotalSumRange(@Param("minAmount") int minAmount, @Param("maxAmount") int maxAmount);
 
-    @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldResponse(u.id,u.photoUrl,u.userName, u.email, u.phoneNumber, u.totalSum) " +
+    @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.AllUsersResponse(u.id,u.photoUrl,u.userName, u.email, u.phoneNumber, u.totalSum) " +
             "FROM User u WHERE u.role = 'USER'")
-    List<MirUsersResponse> getAllWorldUsers();
+    List<AllUsersResponse> getAllWorldUsers();
 
     @Query("SELECT new kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse(u.userName, u.goal, p.status, p.sum ) " +
             "FROM User u INNER JOIN u.payments p WHERE u.id = :id AND u.userStatus = 'MIR'")

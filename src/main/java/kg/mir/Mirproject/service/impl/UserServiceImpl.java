@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
+import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
 import kg.mir.Mirproject.dto.submittedDto.SubmittedResponse;
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AdminResponse getAdminProfileById() {
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Общая сумма не найдена"));
-        List<MirUsersResponse> users = userRepository.getAllWorldUsers();
+        List<AllUsersResponse> users = userRepository.getAllWorldUsers();
         if (users.isEmpty()) {
             return AdminResponse.builder().globalSum(totalSum.getTotalSum()).users(Collections.emptyList()).build();
         }
@@ -119,6 +120,11 @@ public class UserServiceImpl implements UserService {
                 .name(user.getUsername())
                 .number(user.getPhoneNumber())
                 .goal(user.getGoal())
+                .totalSum(user.getTotalSum())
+                .principalDebt(user.getPrincipalDebt())
+                .payDebt(user.getPaidDebt())
+                .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()))
+                .payment(userRepository.getUsersPaymentById(user.getId()))
                 .build();
     }
 

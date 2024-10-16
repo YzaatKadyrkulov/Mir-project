@@ -1,5 +1,6 @@
 package kg.mir.Mirproject.dto;
 
+import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import lombok.*;
 
 import java.util.List;
@@ -9,5 +10,5 @@ import java.util.List;
 @Builder
 public class AdminResponse {
     private int globalSum;
-    private List<MirUsersResponse> users;
+    private List<AllUsersResponse> users;
 }
