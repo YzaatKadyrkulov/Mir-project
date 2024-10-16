@@ -42,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
-            paymentRepo.save(payment);
+//            paymentRepo.save(payment);
             return SimpleResponse.builder().message("Успешно добавлено").httpStatus(HttpStatus.OK).build();
         }
         if (paymentRequest.status().equals(Status.WAITING)) {
@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
-            paymentRepo.save(payment);
+//            paymentRepo.save(payment);
             return SimpleResponse.builder().message("Успешно добавлено").httpStatus(HttpStatus.OK).build();
         }
         payment.setSum(paymentRequest.sum());
