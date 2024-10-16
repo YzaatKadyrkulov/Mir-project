@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return ReceivedResponse.builder()
                 .id(user.getId())
                 .userName(user.getUsername()).photoUrl(user.getPhotoUrl())
+                .totalSum(user.getTotalSum())
                 .principalDebt(user.getPrincipalDebt()).payDebt(user.getPaidDebt())
                 .remainingAmount(Math.abs(user.getPrincipalDebt() - user.getPaidDebt()))
                 .payment(userRepository.getUsersPaymentById(user.getId())).build();

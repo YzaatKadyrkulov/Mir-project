@@ -14,6 +14,7 @@ public class ReceivedResponse {
     private Long id;
     private String userName;
     private String photoUrl;
+    private int totalSum;
     private int principalDebt;
     private int payDebt;
     private int remainingAmount;
