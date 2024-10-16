@@ -2,7 +2,6 @@ package kg.mir.Mirproject.service.impl;
 
 import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.AdminResponse;
-import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;

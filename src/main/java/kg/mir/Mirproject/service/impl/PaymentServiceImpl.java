@@ -42,7 +42,6 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
-//            paymentRepo.save(payment);
             return SimpleResponse.builder().message("Успешно добавлено").httpStatus(HttpStatus.OK).build();
         }
         if (paymentRequest.status().equals(Status.WAITING)) {
@@ -52,7 +51,6 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setDate(LocalDate.now());
             user.getPayments().add(payment);
             userRepository.save(user);
-//            paymentRepo.save(payment);
             return SimpleResponse.builder().message("Успешно добавлено").httpStatus(HttpStatus.OK).build();
         }
         payment.setSum(paymentRequest.sum());
@@ -102,10 +100,13 @@ public class PaymentServiceImpl implements PaymentService {
     public SimpleResponse refundAllSumOfUser(SumRequest sumRequest) {
         User user = userRepository.getUserByEmail(sumRequest.email()).orElseThrow(() -> new NotFoundException("Пользователь с электронной почтой " + sumRequest.email() + " не найден"));
         user.setTotalSum(user.getTotalSum() - sumRequest.sum());
-        user.setUserStatus(UserStatus.SUBMITTED);
+        if (user.getTotalSum() <= 0){
+            user.setUserStatus(UserStatus.SUBMITTED);
+        }
         userRepository.save(user);
         TotalSum totalSum = totalSumRepo.getTotalSumById(5L).orElseThrow(() -> new NotFoundException("Общая сумма не найдена"));
         totalSum.setTotalSum(totalSum.getTotalSum() - sumRequest.sum());
+
         totalSumRepo.save(totalSum);
         return SimpleResponse.builder().message("Успешно возвращена сумма пользователю").httpStatus(HttpStatus.OK).build();
     }
