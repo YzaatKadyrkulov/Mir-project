@@ -178,8 +178,9 @@ public class AuthServiceImpl implements AuthService {
     public void initSaveAdmin() {
         log.info("Попытка сохранить пользователя-администратора");
         User user = User.builder()
-                .userName("Admin")
-                .email("admin@gmail.com")
+                .userName("Kazybek")
+                .email("kazbekkaumov@gmail.com")
+                .phoneNumber("+79932297834")
                 .goal(0)
                 .principalDebt(0)
                 .totalSum(0)
