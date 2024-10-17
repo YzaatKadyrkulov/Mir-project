@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.SimpleResponse;
-import kg.mir.Mirproject.dto.WorldDto.DebtRequest;
+import kg.mir.Mirproject.dto.payment.DebtRequest;
 import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;

@@ -1,4 +1,4 @@
-package kg.mir.Mirproject.dto.WorldDto;
+package kg.mir.Mirproject.dto.payment;
 
 import lombok.Builder;
 
