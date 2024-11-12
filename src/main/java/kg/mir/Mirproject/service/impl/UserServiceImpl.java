@@ -2,6 +2,7 @@ package kg.mir.Mirproject.service.impl;
 
 import jakarta.transaction.Transactional;
 import kg.mir.Mirproject.dto.AdminResponse;
+import kg.mir.Mirproject.dto.PercentResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
@@ -94,6 +95,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+
     @Override
     public ProfileResponse updateUserProfileById(ProfileUpdateRequest profileUpdateRequest) {
         User user = getAuthentication();
@@ -183,6 +185,13 @@ public class UserServiceImpl implements UserService {
     public Optional<UserWorldProfileResponse> findUserById(Long id) {
         return Optional.ofNullable(userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id: " + id + " не найден")));
+    }
+
+    @Override
+    public PercentResponse getPercentUserById(Long id) {
+        return userRepository.findPercentResponseByUserId(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id: " + id + " не найден"));
+
     }
 
     private User getAuthentication() {

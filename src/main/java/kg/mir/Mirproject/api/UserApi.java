@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import kg.mir.Mirproject.dto.AdminResponse;
+import kg.mir.Mirproject.dto.PercentResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -140,6 +141,7 @@ public class UserApi {
         ReceivedResponse user = userService.getReceivedUserById(id);
         return ResponseEntity.ok(user);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "Получить профиль администратора",
@@ -193,5 +195,15 @@ public class UserApi {
     public ResponseEntity<List<UserStatusResponse>> searchSubmittedUser(@RequestParam("query") String query) {
         List<UserStatusResponse> users = userService.searchSubmittedUser(query);
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/percent/{userId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(
+            summary = "Вывод процента пользователя",
+            description = "Выводит пользователя и его проценты метод для 'ADMIN'"
+    )
+    public ResponseEntity<PercentResponse> getPercent(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getPercentUserById(userId));
     }
 }
