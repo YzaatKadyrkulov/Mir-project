@@ -1,6 +1,7 @@
 package kg.mir.Mirproject.service;
 
 import kg.mir.Mirproject.dto.AdminResponse;
+import kg.mir.Mirproject.dto.PercentResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -41,4 +42,6 @@ public interface UserService {
     List<UserStatusResponse> searchFinishedUser(String query);
 
     List<UserStatusResponse> searchSubmittedUser(String query);
+
+    PercentResponse getPercentUserById(Long id);
 }

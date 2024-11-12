@@ -1,5 +1,6 @@
 package kg.mir.Mirproject.repository;
 
+import kg.mir.Mirproject.dto.PercentResponse;
 import kg.mir.Mirproject.dto.WorldDto.AllUsersResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldProfileResponse;
 import kg.mir.Mirproject.dto.WorldDto.UserWorldResponse;
@@ -64,4 +65,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByResetToken(String resetToken);
 
     void deleteAllByUserStatus(UserStatus userStatus);
+
+    @Query("""
+            select new kg.mir.Mirproject.dto.PercentResponse(
+            u.id,
+            u.totalSum,
+            cast(u.totalSum * 0.03 as double),
+            cast(u.totalSum * 0.02 as double),
+            cast(u.totalSum * 0.01 as double)
+            )
+            from User u
+            where u.id = :userId
+            """)
+    Optional<PercentResponse> findPercentResponseByUserId(@Param(value = "userId") Long userId);
 }
