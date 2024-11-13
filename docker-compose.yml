@@ -4,7 +4,7 @@ services:
     image: mir-project
     container_name: backend
     ports:
-      - "80:2023"
+      - "8080:2023"
     environment:
       APP_DATABASE_URL: jdbc:postgresql://database:5432/postgres
       APP_DATABASE_USER: miruser
