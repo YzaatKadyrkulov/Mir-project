@@ -36,7 +36,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(request -> {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
                     corsConfiguration.addAllowedOriginPattern("*");
                     corsConfiguration.setAllowCredentials(true);
@@ -44,7 +46,6 @@ public class SecurityConfig {
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
                 }))
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**", "/api/awsS3/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
