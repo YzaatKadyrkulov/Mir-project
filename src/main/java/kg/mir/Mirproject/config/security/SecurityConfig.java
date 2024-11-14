@@ -38,7 +38,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("*");
+                    corsConfiguration.addAllowedOriginPattern("*");
+                    corsConfiguration.setAllowCredentials(true);
                     corsConfiguration.addAllowedMethod("*");
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
@@ -48,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/awsS3/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest()
-                        .permitAll())  // Здесь вы разрешаете все запросы без аутентификации, если необходимо
+                        .permitAll())  // Разрешить все запросы
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -56,6 +57,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
