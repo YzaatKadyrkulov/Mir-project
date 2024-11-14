@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/awsS3/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
+                        .permitAll())
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
