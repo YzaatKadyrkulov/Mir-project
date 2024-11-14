@@ -1,5 +1,10 @@
 package kg.mir.Mirproject.config.security;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kg.mir.Mirproject.config.security.jwt.JwtFilter;
 import kg.mir.Mirproject.exception.NotFoundException;
 import kg.mir.Mirproject.repository.UserRepository;
@@ -19,6 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -72,4 +80,17 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
+
+    @Bean
+    public Filter referrerPolicyFilter() {
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws ServletException, IOException {
+                response.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
+                filterChain.doFilter(request, response);
+            }
+        };
+    }
+
 }
