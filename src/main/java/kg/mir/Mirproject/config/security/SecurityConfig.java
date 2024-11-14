@@ -38,12 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    // Разрешаем доступ с указанных доменов
-                    corsConfiguration.addAllowedOrigin("http://localhost:5173");
-                    corsConfiguration.addAllowedOrigin("http://mir-nori.ru");
-                    corsConfiguration.addAllowedOrigin("https://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com");
-                    corsConfiguration.addAllowedOrigin("http://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com:8080");
-                    corsConfiguration.addAllowedOrigin("http://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com");
+                    corsConfiguration.addAllowedOrigin("*");
                     corsConfiguration.addAllowedMethod("*");
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
