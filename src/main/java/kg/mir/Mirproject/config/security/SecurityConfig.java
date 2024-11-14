@@ -38,7 +38,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("*");
+                    // Разрешаем доступ с указанных доменов
+                    corsConfiguration.addAllowedOrigin("http://localhost:5173");
+                    corsConfiguration.addAllowedOrigin("http://mir-nori.ru");
+                    corsConfiguration.addAllowedOrigin("https://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com");
+                    corsConfiguration.addAllowedOrigin("http://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com:8080");
+                    corsConfiguration.addAllowedOrigin("http://ec2-3-127-65-10.eu-central-1.compute.amazonaws.com");
                     corsConfiguration.addAllowedMethod("*");
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
@@ -48,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/awsS3/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
+                        .permitAll())  // Здесь вы разрешаете все запросы без аутентификации, если необходимо
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
