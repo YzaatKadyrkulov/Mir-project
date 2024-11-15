@@ -69,10 +69,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("""
             select new kg.mir.Mirproject.dto.PercentResponse(
             u.id,
-            u.totalSum,
-            cast(u.totalSum * 0.03 as double),
-            cast(u.totalSum * 0.02 as double),
-            cast(u.totalSum * 0.01 as double)
+            u.principalDebt,
+            cast(u.principalDebt * 0.03 as double),
+            cast(u.principalDebt * 0.02 as double),
+            cast(u.principalDebt * 0.01 as double)
             )
             from User u
             where u.id = :userId
