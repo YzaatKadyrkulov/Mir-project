@@ -206,4 +206,14 @@ public class UserApi {
     public ResponseEntity<PercentResponse> getPercent(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getPercentUserById(userId));
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(
+            summary = "Получить проценты общей суммы администратора",
+            description = "Возвращает профиль администратора с глобальной суммой и процентами сумм. Доступно только пользователю с ролью 'ADMIN'."
+    )
+    @GetMapping("/percent")
+    public ResponseEntity<AdminResponse> getPercentSum() {
+        AdminResponse adminResponse = userService.getPercent();
+        return ResponseEntity.ok(adminResponse);
+    }
 }

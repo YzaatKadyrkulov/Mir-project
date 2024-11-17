@@ -194,6 +194,14 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public AdminResponse getPercent() {
+        return totalSumRepo.getTotalSumAndPercent(5L) == null
+                ? new AdminResponse(
+                0, (double) 0, (double) 0, (double) 0
+        ) : totalSumRepo.getTotalSumAndPercent(5L);
+    }
+
     private User getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

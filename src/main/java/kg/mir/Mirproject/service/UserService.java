@@ -44,4 +44,6 @@ public interface UserService {
     List<UserStatusResponse> searchSubmittedUser(String query);
 
     PercentResponse getPercentUserById(Long id);
+
+    AdminResponse getPercent();
 }
