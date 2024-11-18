@@ -252,8 +252,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public String generateSecurePassword() {
-        StringBuilder password = new StringBuilder(6);
-        for (int i = 0; i < 6; i++) {
+        StringBuilder password = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
             int index = random.nextInt(CHARACTERS.length());
             password.append(CHARACTERS.charAt(index));
         }
