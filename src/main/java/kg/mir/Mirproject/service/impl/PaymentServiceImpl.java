@@ -131,12 +131,13 @@ public class PaymentServiceImpl implements PaymentService {
         if (totalSum.getTotalSum() < debtRequest.debtSum()) {
             throw new BadRequestException("Сумма MIR слишком мала");
         }
-        user.setPrincipalDebt(user.getPrincipalDebt()+debtRequest.debtSum());
+        user.setPrincipalDebt(user.getPrincipalDebt() + debtRequest.debtSum());
         user.setUserStatus(UserStatus.RECEIVED);
+        int total = user.getTotalSum();
         userRepository.save(user);
         int debt = debtRequest.debtSum();
-        debt = debt - ((debt * 6) / 100);
-        totalSum.setTotalSum(totalSum.getTotalSum() - debt);
+        debt = (int) (debt / (1 + (double) 6 / 100));
+        totalSum.setTotalSum(totalSum.getTotalSum() - (debt+total));
         totalSumRepo.save(totalSum);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
