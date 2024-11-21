@@ -78,4 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where u.id = :userId
             """)
     Optional<PercentResponse> findPercentResponseByUserId(@Param(value = "userId") Long userId);
+
+    @Query("select sum(u.principalDebt) from User u")
+    Integer getPrincipalDebt();
 }
