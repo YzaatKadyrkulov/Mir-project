@@ -3,11 +3,15 @@ package kg.mir.Mirproject.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import kg.mir.Mirproject.dto.AdminResponse;
 import kg.mir.Mirproject.dto.SimpleResponse;
 import kg.mir.Mirproject.dto.payment.DebtRequest;
 import kg.mir.Mirproject.dto.MirUsersResponse;
 import kg.mir.Mirproject.dto.payment.PaymentRequest;
 import kg.mir.Mirproject.dto.payment.SumRequest;
+import kg.mir.Mirproject.enums.PercentType;
 import kg.mir.Mirproject.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -75,8 +79,24 @@ public class PaymentApi {
     )
     @PostMapping("/{userId}/giveDebt")
     public ResponseEntity<SimpleResponse> giveDebtToUser(@PathVariable Long userId,
-                                                       @RequestBody @Valid DebtRequest debtRequest) {
+                                                         @RequestBody @Valid DebtRequest debtRequest) {
         SimpleResponse response = paymentService.giveDebtToUser(userId, debtRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(
+            summary = "Обновляет проценты",
+            description = "Обновляет проценты каждой категории Сотрудники, Страховка, Программа." +
+                    " Доступно только пользователю с ролью 'ADMIN'."
+    )
+    @PutMapping("update/percent")
+    public ResponseEntity<AdminResponse> updatePercent(@RequestParam
+                                                        @NotNull(message = "PercentType cannot be null") PercentType percentType,
+                                                        @RequestParam
+                                                        @NotNull(message = "Sum cannot be null")
+                                                        @Min(value = 1, message = "Sum must be greater than 0") Double sum) {
+        AdminResponse adminResponse = paymentService.updatePercent(percentType,sum);
+        return ResponseEntity.ok(adminResponse);
     }
 }
