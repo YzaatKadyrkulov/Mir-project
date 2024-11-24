@@ -171,6 +171,7 @@ public class PaymentServiceImpl implements PaymentService {
             checkSumPercent(sum, totalSum.getProgram(), "Сумма не должна быть больше чем преждний");
             totalSum.setProgram(sum);
         }
+        totalSumRepo.save(totalSum);
         return userService.getPercent();
     }
 
