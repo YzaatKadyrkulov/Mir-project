@@ -95,7 +95,7 @@ public class PaymentApi {
                                                         @NotNull(message = "PercentType cannot be null") PercentType percentType,
                                                         @RequestParam
                                                         @NotNull(message = "Sum cannot be null")
-                                                        @Min(value = 1, message = "Sum must be greater than 0") Double sum) {
+                                                        @Min(value = 0, message = "Sum must be greater than 0") Double sum) {
         AdminResponse adminResponse = paymentService.updatePercent(percentType,sum);
         return ResponseEntity.ok(adminResponse);
     }

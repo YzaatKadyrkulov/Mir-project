@@ -76,6 +76,9 @@ public class AuthServiceImpl implements AuthService {
             TotalSum newTotalSum = new TotalSum();
             newTotalSum.setId(5L);
             newTotalSum.setTotalSum(0);
+            newTotalSum.setEmployees((double) 0);
+            newTotalSum.setInsurance((double) 0);
+            newTotalSum.setProgram((double) 0);
             return newTotalSum;
         });
         totalSum.setTotalSum(totalSum.getTotalSum() + newUser.getTotalSum());
