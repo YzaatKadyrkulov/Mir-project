@@ -196,14 +196,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AdminResponse getPercent() {
-        int sum = userRepository.getPrincipalDebt();
-        if (sum == 0)
-            return new AdminResponse(0, (double) 0, (double) 0, (double) 0);
+        TotalSum totalSum = totalSumRepo.getTotalSumById(5L)
+                .orElseGet(() -> {
+                    TotalSum newTotalSum = new TotalSum();
+                    newTotalSum.setId(5L);
+                    newTotalSum.setTotalSum(0);
+                    newTotalSum.setEmployees((double) 0);
+                    newTotalSum.setInsurance((double) 0);
+                    newTotalSum.setProgram((double) 0);
+                    totalSumRepo.save(newTotalSum);
+                    return newTotalSum;
+                });
         return new AdminResponse(
-                sum,
-                sum * 0.03,
-                sum * 0.02,
-                sum * 0.01
+                totalSum.getTotalSum(),
+                totalSum.getEmployees(),
+                totalSum.getInsurance(),
+                totalSum.getProgram()
         );
     }
 

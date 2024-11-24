@@ -16,4 +16,7 @@ public class TotalSum {
     @Id
     private Long id;
     private int totalSum;
+    private Double employees;
+    private Double insurance;
+    private Double program;
 }
